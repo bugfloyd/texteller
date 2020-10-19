@@ -1,16 +1,7 @@
-=== Texteller ===
-Contributors: yashar_hv
-Tags: sms,mobile registration,phone login,sms notifications,mobile verification,woocommerce,send sms,bulk sms,newsletter,text message,mobile login,receive sms
-Requires at least: 5.3
-Tested up to: 5.4.1
-Requires PHP: 7.1
-Stable tag: trunk
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-
+# Texteller
 An all-in-one text message integration solution for WordPress and popular third-party plugins, supporting multiple SMS and messaging gateways.
 
-== Description ==
+## Description
 Texteller is an all-in-one text message integration solution for WordPress, supporting multiple third-party SMS and messaging gateways.  
 The plugin tries to integrate with almost all email triggers on the site to send text messages. You can also receive text messages with supported gateways.  
 
@@ -18,8 +9,8 @@ Texteller offers a separated member registration system and along with the compl
 
 The plugin has a complete text message newsletter system with a detailed registration form which could be inserted on any page or post using WordPress Widgets or the shortcode. Members registered via newsletter form may have no user linked to them, in order to prevent conflicts with other third-party plugins and they become just members of your site’s text newsletter!  
 
-# PLUGIN FEATURES #  
-## WORDPRESS INTEGRATION FEATURES ##  
+## PLUGIN FEATURES
+### WORDPRESS INTEGRATION FEATURES
 *   Enable/disable WordPress user registration integration  
 *   Full integration with WordPress user registration on wp-login.php and admin dashboard pages: Users may be able to register using their mobile number and their member account will be linked to their WP user  
 *   Customize registration form fields: Edit fields’ label or mark them as required  
@@ -39,7 +30,7 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Send notifications when a new comment is added to a blog post  
 *   Send notifications when a comment is approved  
 
-## NEWSLETTER FEATURES ##  
+### NEWSLETTER FEATURES  
 *   Text message newsletter registration form  
 *   Insert registration form on any page or post using WordPress Widgets or the plugin shortcode  
 *   Customize registration form fields: Edit fields’ label and size, or make them required  
@@ -49,7 +40,7 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Mobile number verification by sending a code when a members registers via newsletter form  
 *   Send notifications when a new member is registered via newsletter form  
 
-## WOOCOMMERCE INTEGRATION FEATURES ##  
+### WOOCOMMERCE INTEGRATION FEATURES
 *   Enable/disable WooCommerce customer registration integration  
 *   Full integration with WooCommerce customer registration from My-Account and Checkout pages: Customers may be able to register using their mobile number, and their member will be linked to their WP user  
 *   Login with mobile number along with username or email login from My-Account and Checkout pages  
@@ -77,7 +68,7 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Send notifications when a new order is placed by a customer
 *   Send notification when an order status is changed
 
-## MEMBERS MANAGEMENT FEATURES ##  
+### MEMBERS MANAGEMENT FEATURES
 *   Add/Edit/Remove members from admin dashboard and a dedicated screen  
 *   Ability to automatic member deletion when a linked user got deleted from the site  
 *   Member note for each member for admin reference  
@@ -89,7 +80,7 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Members bulk actions: Verify, Delete, Cancel membership, and Send text messages  
 *   Search between members using first or last names or mobile number  
 
-## MESSAGES MANAGEMENT FEATURES ##  
+### MESSAGES MANAGEMENT FEATURES
 *   Ability to save all sent messages and notifications on a separated table on site’s database (Messages including password and RP links are excluded)  
 *   Manage sent and received messages from admin dashboard  
 *   See delivery status for sent messages (if supported by the gateway)  
@@ -98,7 +89,7 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Messages bulk actions: reply, resend, and delete  
 *   Search between messages’ content or recipients  
 
-## GENERAL & COMMON FEATURES ##  
+### GENERAL & COMMON FEATURES
 *   Send text messages to manually selected or filtered members or custom numbers  
 *   Receive text messages on a webhook (receive end-point). To use this feature the selected gateway should support message receiving  
 *   Automatic digit conversion to a selected language in the notification message content  
@@ -115,23 +106,23 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Control verification codes’ lifetime
 *   Advanced member importer tool to automatically register existing site users as a linked member
 
-# SUPPORTED GATEWAYS #  
+### SUPPORTED GATEWAYS 
 *   [Twilio](https://www.twilio.com/)
 *   [Melipayamak](https://www.melipayamak.com/) (Dedicated and shared line)
 *   There’s more to come soon!  
 
-# REQUIREMENTS #  
+### REQUIREMENTS
 Texteller needs PHP version 7.1 or above to give you the lite and smooth experience with the least effect on your website’s performance.  
 You should also have a WordPress version 5.0 or above to use the plugin and if you are planning to use the WooCommerce integration features, you will need WooCommerce version 3.7 or above.  
 To enable internationalization features like local calendar and date types, PHP Intl extension should be installed on the server.  
 
 
-== Installation ==
+## Installation
 1. Upload the plugin files to the `/wp-content/plugins/texteller` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the \'Plugins\' screen in WordPress
 3. Use the Texteller->Options screen to configure the plugin
 
-== Frequently Asked Questions ==
+### Frequently Asked Questions
 = Are you going to add more messaging gateways to the plugin? =
 
 Definitely yes! Texteller will support most popular messaging gateways in the world in near future!
@@ -144,38 +135,5 @@ Texteller has many features based on mobile number such as newsletter and messag
 
 Of course! More plugin integration will be available in future updates. Some notable ones are: Easy Digital Downloads, Gravity Forms, Ultimate Member, etc.
 
-== Screenshots ==
- 
-1. Notification trigger configuration
-2. WordPress user integration options
-3. WordPress user registration form
-4. WooCommerce registration form fields
-5. Dashboard Members screen
-6. Newsletter registration form
-7. Add/Edit member screen
-8. Send message screen
-9. Member groups
-10. WordPress Profile page
-11. Gateway settings
-12. WooCommerce registration and login via My-Account page
-
-== Changelog ==
-
-= 0.1.3 =
-* New: Added a new tool to import members from users registered via third-party plugins
-* New: Added a new metabox to WooCommerce Edit Order page for site admins to view member's number and send text messages directly from order screen
-* New: Introduced two new hooks to add custom gateways: 'tlr_gateway_class_name' & 'tlr_available_gateways'
-* Tweak: Improved plugin cron jobs structure
-* Fix: Conflict on the pages with multiple mobile number fields (e.g. WC Account Page with a Newsletter widget in the footer)
-* Fix: Removed some redundant codes and the misc directory
-* Fix: Removed plugin system log messages from translatable texts
-* Fix: Now we use a custom array_key_first() function to be compatible with PHP < 7.3 & keep minimum requirement as 7.1
-* Fix: Wrong email error when registering from wp-login.php on a Non-English sites
-* Fix: UI glitch in the form fields on WC pages
-* Fix: Fixed a PHP warning while deleting members, when there is no defined staff on the site
-* Fix: Wrong URL for options page in the description on "Dashboard Add New User" screen
-* Fix: Empty values for some member tags in "WordPress New User" notifications
-* Fix: Improved tag insertion by click, for notification options with multiple trigger recipients
-
-= 0.1.0 =
-Initial release
+## LICENSE
+Code released under the GNU GPL v3 License.
