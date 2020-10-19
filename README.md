@@ -1,4 +1,5 @@
 # Texteller
+WorPress Repository: https://wordpress.org/plugins/texteller/  
 An all-in-one text message integration solution for WordPress and popular third-party plugins, supporting multiple SMS and messaging gateways.
 
 ## Description
