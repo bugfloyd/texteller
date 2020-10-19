@@ -123,15 +123,15 @@ To enable internationalization features like local calendar and date types, PHP 
 3. Use the Texteller->Options screen to configure the plugin
 
 ### Frequently Asked Questions
-= Are you going to add more messaging gateways to the plugin? =
+* Are you going to add more messaging gateways to the plugin? =
 
 Definitely yes! Texteller will support most popular messaging gateways in the world in near future!
 
-= Why the plugin uses separated member system instead of using WordPress users? =
+* Why the plugin uses separated member system instead of using WordPress users? =
 
 Texteller has many features based on mobile number such as newsletter and messaging lists (coming soon). To prevent conflicts with other third-party plugins, we use a dedicated members database table. However, each member can be linked to an existing WP user.
 
-= Is there any plan to support more plugins? =  
+* Is there any plan to support more plugins? =  
 
 Of course! More plugin integration will be available in future updates. Some notable ones are: Easy Digital Downloads, Gravity Forms, Ultimate Member, etc.
 
