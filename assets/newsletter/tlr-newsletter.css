@@ -1,0 +1,95 @@
+/**  This file is auto-generated, do not edit it or your modifications would be removed when saving plugin options. **/
+.tlr-registration-form {
+    position: relative;
+}
+    .tlr-form-wrapper {
+        padding: 20px;
+    }
+        .tlr-form-wrapper > div {
+            padding: 5px;
+        }
+        .tlr-form-wrapper .tlr-header {
+            padding: 5px 10px;
+        }
+            h3.tlr-nl-form-title {
+                margin-top: 0;
+                margin-bottom: 5px;
+            }
+            .tlr-registration-desc {
+                margin-bottom:0;
+            }
+        .tlr-fields-wrapper {
+            display: grid;
+            grid-template-columns: auto;
+            -ms-grid-columns: auto;
+            row-gap: 10px;
+            grid-row-gap: 10px;
+        }
+            .tlr-input-wrap {
+                display: inline-block;
+                float: left;
+                padding: 5px;
+            }
+                html[dir=rtl] #tlr-nl-form input.tlr-input, html[dir=rtl] #tlr-nl-form select.tlr-input {
+                    padding: 5px 35px 5px 15px;
+                    background-position:right 5px top 50%;
+                }
+
+                #tlr-registration input.tlr-mobile-field, #tlr-registration input.tlr-email-field {
+                    direction: ltr;
+                }
+
+                /* Mobile number input */
+                .tlr-mobile-wrap .iti{
+                    width:100%;
+                }
+                .tlr-mobile-wrap .tlr-mobile-field{
+                    padding-left: 80px!important;
+                }
+                html[dir=rtl] .tlr-mobile-wrap .tlr-mobile-field{
+                    padding-right: 80px!important;
+                }
+                .tlr-mobile-wrap div.iti__flag-container {
+                    margin-left:35px;
+                }
+                html[dir=rtl] .tlr-mobile-wrap div.iti__flag-container {
+                    margin-right:35px;
+                }
+                input.tlr-mobile-field:-moz-placeholder, input.tlr-mobile-field:-ms-input-placeholder, input.tlr-mobile-field::-webkit-input-placeholder {
+                    direction: ltr!important;
+                }
+                input.tlr-mobile-field {
+                    direction: ltr;
+                }
+                ul#country-listbox {
+                    font-size: 14px;
+                }
+
+            .tlr-submit-wrap {
+                text-align: center;
+            }
+                .tlr-submit:hover, .tlr-submit:focus,.tlr-submit::-moz-focus-inner {
+                    text-decoration:none;
+                    border: 0;
+                    outline:none;
+                }
+
+        .tlr-overlay {
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: none;
+            top: 0;
+        }
+        div.tlr-results-wrapper {
+            z-index: 3;
+            position: absolute;
+            display: none;
+            width: 70%;
+            margin: 0 15%;
+            top: 25%;
+        }
+            .tlr-response .tlr-verification {
+                text-align: center;
+            }#tlr-nl-form{background-color:#ffffff;border-width:1px;border-radius:3px;border-color:#dcdcdc;border-style:solid;}input.tlr-input, select.tlr-input{max-height:3.2em;height:3em;vertical-align:middle;display:inline-block;font-size:13px;border-width:1px;border-radius:2px;border-color:#bed1e0;border-style:solid;background-color:#f3f4f9;color:#000000;background-size:25px;background-repeat:no-repeat;background-position:left 5px top 50%;padding:5px 15px 5px 35px;width:calc( 100% - ( 2 * 1px ) );}input.tlr-input:focus, select.tlr-input:focus{border-color:#cbe2f2!important;background-color:#ffffff;}input.tlr-input::placeholder, select.tlr-input::placeholder{color:#000000;}.tlr-nl-form-title{font-size:18px;color:#282828;font-weight:bold;width:100%;}.tlr-nl-desc{font-size:13px;color:#282828;width:100%;}#tlr-nl-form .tlr-submit{margin:0 auto;text-align:center;display:block;padding:12px;width:calc(100% - 10px);font-size:16px;background-color:#073d56;border-style:solid;border-width:0;border-color:#073d56;border-radius:3px;color:#ffffff;}.tlr-input.tlr-valid{border-color:#59b7d1;}.tlr-input.tlr-invalid{border-color:#bb245c;}#tlr-nl-form .tlr-submit:hover{background-color:#0e2b3a;border-color:#0e2b3a;color:#ededed;}.tlr-results-wrapper{background-color:#e6e6f0;padding:20px;border-radius:3px;}.tlr-result-text{text-align:center;display:block;margin-bottom:20px;font-size:13px;color:#0d0d0d;}.tlr-verification-result-text{font-size:13px;color:#0d0d0d;display:block;}.tlr-overlay{background-color:rgba(1,19,30,0.8);border-radius:3px;}.tlr-first-name-wrap{width:50%;}#tlr-nl-form .tlr-first-name-field{background-image:url(http://localhost/wordpress/wp-content/plugins/texteller/assets/images/tlr_member.png);}.tlr-last-name-wrap{width:50%;}#tlr-nl-form .tlr-last-name-field{background-image:url(http://localhost/wordpress/wp-content/plugins/texteller/assets/images/tlr_member.png);}.tlr-mobile-wrap{width:50%;}#tlr-nl-form .tlr-mobile-field{background-image:url(http://localhost/wordpress/wp-content/plugins/texteller/assets/images/tlr_mobile.png);}.tlr-email-wrap{width:50%;}#tlr-nl-form .tlr-email-field{background-image:url(http://localhost/wordpress/wp-content/plugins/texteller/assets/images/tlr_email.png);}.tlr-member-group-wrap{width:50%;}#tlr-nl-form .tlr-member-group-field{background-image:url(http://localhost/wordpress/wp-content/plugins/texteller/assets/images/tlr_member_group.png);}.tlr-title-wrap{width:50%;}#tlr-nl-form .tlr-title-field{background-image:url(http://localhost/wordpress/wp-content/plugins/texteller/assets/images/tlr_title.png);}@media screen and ( max-width: 768px ){.tlr-input-wrap{width:calc(100% - 4px);}}

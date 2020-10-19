@@ -1,0 +1,32 @@
+.tlr-valid{
+    border: 1px solid #29acb9!important;
+}
+.tlr-invalid{
+    border: 1px solid #bb245c!important;
+}
+input.tlr-mobile-field {
+    direction: ltr!important;
+    font-size: 0.9em!important;
+    line-height: 2.3em;
+    padding-left: 60px!important;
+}
+input.tlr-mobile-field:-moz-placeholder, input.tlr-mobile-field:-ms-input-placeholder, input.tlr-mobile-field::-webkit-input-placeholder {
+    direction: ltr!important;
+}
+div.iti {
+    width: 100%;
+    margin: 2px 6px 16px 0;
+}
+    div.iti__flag-container {
+        margin-left:10px;
+        left: 0;
+        right: auto;
+        direction: ltr;
+    }
+    ul.iti__country-list {
+        font-size: 0.8em;
+        max-width: 250px;
+    }
+.tlr-description {
+    margin: 15px 0 10px 0;
+}
