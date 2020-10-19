@@ -1,0 +1,94 @@
+.tlr-registration-form {
+    position: relative;
+}
+    .tlr-form-wrapper {
+        padding: 20px;
+    }
+        .tlr-form-wrapper > div {
+            padding: 5px;
+        }
+        .tlr-form-wrapper .tlr-header {
+            padding: 5px 10px;
+        }
+            h3.tlr-nl-form-title {
+                margin-top: 0;
+                margin-bottom: 5px;
+            }
+            .tlr-registration-desc {
+                margin-bottom:0;
+            }
+        .tlr-fields-wrapper {
+            display: grid;
+            grid-template-columns: auto;
+            -ms-grid-columns: auto;
+            row-gap: 10px;
+            grid-row-gap: 10px;
+        }
+            .tlr-input-wrap {
+                display: inline-block;
+                float: left;
+                padding: 5px;
+            }
+                html[dir=rtl] #tlr-nl-form input.tlr-input, html[dir=rtl] #tlr-nl-form select.tlr-input {
+                    padding: 5px 35px 5px 15px;
+                    background-position:right 5px top 50%;
+                }
+
+                #tlr-registration input.tlr-mobile-field, #tlr-registration input.tlr-email-field {
+                    direction: ltr;
+                }
+
+                /* Mobile number input */
+                .tlr-mobile-wrap .iti{
+                    width:100%;
+                }
+                .tlr-mobile-wrap .tlr-mobile-field{
+                    padding-left: 80px!important;
+                }
+                html[dir=rtl] .tlr-mobile-wrap .tlr-mobile-field{
+                    padding-right: 80px!important;
+                }
+                .tlr-mobile-wrap div.iti__flag-container {
+                    margin-left:35px;
+                }
+                html[dir=rtl] .tlr-mobile-wrap div.iti__flag-container {
+                    margin-right:35px;
+                }
+                input.tlr-mobile-field:-moz-placeholder, input.tlr-mobile-field:-ms-input-placeholder, input.tlr-mobile-field::-webkit-input-placeholder {
+                    direction: ltr!important;
+                }
+                input.tlr-mobile-field {
+                    direction: ltr;
+                }
+                ul#country-listbox {
+                    font-size: 14px;
+                }
+
+            .tlr-submit-wrap {
+                text-align: center;
+            }
+                .tlr-submit:hover, .tlr-submit:focus,.tlr-submit::-moz-focus-inner {
+                    text-decoration:none;
+                    border: 0;
+                    outline:none;
+                }
+
+        .tlr-overlay {
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: none;
+            top: 0;
+        }
+        div.tlr-results-wrapper {
+            z-index: 3;
+            position: absolute;
+            display: none;
+            width: 70%;
+            margin: 0 15%;
+            top: 25%;
+        }
+            .tlr-response .tlr-verification {
+                text-align: center;
+            }
