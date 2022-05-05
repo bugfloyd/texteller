@@ -57,14 +57,17 @@ final class Texteller
      */
     private function __construct()
     {
-        // Register plugin autoload
+	    $this->define_constants();
+
+	    // Register plugin autoload
         try {
             spl_autoload_register([self::class, "autoload"], false);
         } catch (Exception $e) {
             error_log($e->getMessage());
         }
 
-		$this->define_constants();
+        // Register composer autoload
+        require_once TLR_ABSPATH . "/vendor/autoload.php";
 
         // Activating the plugin
         register_activation_hook(TLR_PLUGIN_FILE, [self::class, "install"]);
