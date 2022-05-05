@@ -360,11 +360,15 @@ class Base implements TLR\Interfaces\Gateway
 		?>
 		<select name="tlr_gateway_twilio_number" aria-label="Select gateway phone number to be used in the plugin.">
 			<?php
-			if ( !$numbers ) {
+			if ( $numbers === false ) {
 				?>
 				<option value="0"><?= esc_html__('Please save valid authentication credentials', 'texteller' ) ?></option>
 				<?php
-			} else {
+			} elseif(empty($numbers)) {
+				?>
+                <option value="0"><?= esc_html__('Please buy a number at twilio!', 'texteller' ) ?></option>
+				<?php
+            } else {
 				foreach ( (array) $numbers as $number ) {
 					if ( !empty($number['phone_number']) ) {
 						?>
