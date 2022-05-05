@@ -8,7 +8,7 @@
  * Text Domain: texteller
  * Requires at least: 5.3
  * Tested up to: 5.4.1
- * Requires PHP: 7.1
+ * Requires PHP: 7.4
  * WC requires at least: 3.7
  * WC tested up to: 4.2.0
  */
