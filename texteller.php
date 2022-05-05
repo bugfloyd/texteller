@@ -15,20 +15,20 @@
 
 namespace Texteller;
 
-//use Texteller\Modules\WordPress_Module_Base;
+if (!defined("ABSPATH")) {
+    exit();
+} // Exit if accessed directly
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-// Define WC_PLUGIN_FILE.
-if ( ! defined( 'TLR_PLUGIN_FILE' ) ) {
-	define( 'TLR_PLUGIN_FILE', __FILE__ );
+// Define TLR_PLUGIN_FILE.
+if (!defined("TLR_PLUGIN_FILE")) {
+    define("TLR_PLUGIN_FILE", __FILE__);
 }
-if ( ! class_exists('Texteller\Texteller') ) {
-	require_once dirname( __FILE__ ) . '/includes/class-texteller.php';
+if (!class_exists("Texteller\Texteller")) {
+    require_once dirname(__FILE__) . "/includes/class-texteller.php";
 }
 
-function TLR()
+function TLR(): void
 {
-	Texteller::getInstance();
+    Texteller::getInstance();
 }
 TLR();
