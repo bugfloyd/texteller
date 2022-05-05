@@ -6,8 +6,6 @@ defined( 'ABSPATH' ) || exit;
 
 function tlr_get_number_info( string $mobile ): array
 {
-	Texteller::autoload_libphonenumber();
-
 	$data = [];
 	$number_types = [
 		0   =>  'Fixed Line',
@@ -162,7 +160,6 @@ function tlr_sanitize_mobile($mobile)
 
 function tlr_is_mobile_valid( $mobile )
 {
-	Texteller::autoload_libphonenumber();
 	$phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
 	try {
 		$NumberProto = $phoneUtil->parse($mobile);
@@ -175,7 +172,6 @@ function tlr_is_mobile_valid( $mobile )
 
 function tlr_get_full_number( string $mobile, string $default_region = '' )
 {
-	Texteller::autoload_libphonenumber();
 	$phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
 	try {
 		$NumberProto = $phoneUtil->parse( $mobile, $default_region );

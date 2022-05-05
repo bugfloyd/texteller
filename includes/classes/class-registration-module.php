@@ -326,7 +326,6 @@ class Registration_Module
 				$format = get_option( $generator_option_name . '_national_mobile', 'leading-zero' );
 				$mobile = $this->member->get_mobile();
 				if ( $mobile ) {
-					Texteller::autoload_libphonenumber();
 					$phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
 					try {
 						$NumberProto = $phoneUtil->parse($mobile);
