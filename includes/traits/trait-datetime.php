@@ -41,7 +41,7 @@ trait DateTime {
 	protected static function format_datetime( $DateTime ) : string
 	{
 		if ( empty(self::$datetime_formatter) || empty(self::$GMTDateTimeZone) ) {
-			return $DateTime;
+			return is_a($DateTime, 'DateTime') ? $DateTime->format('Y-m-d H:i:s') : $DateTime;
 		}
 
 		if ( ! is_a($DateTime, '\DateTime') ) {
