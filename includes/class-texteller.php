@@ -147,16 +147,16 @@ final class Texteller
         // Intl Tel Input
         wp_register_script(
             "tlr-intl-tel-input",
-            TLR_ASSETS_URI . "/intl-tel-input/build/js/intlTelInput.min.js",
+	        TLR_LIBS_URI . "/intl-tel-input/build/js/intlTelInput.min.js",
             [],
-            "16.0.11",
+            "17.0.0",
             true
         );
         wp_register_style(
             "tlr-intl-tel-input",
-            TLR_ASSETS_URI . "/intl-tel-input/build/css/intlTelInput.min.css",
+	        TLR_LIBS_URI . "/intl-tel-input/build/css/intlTelInput.min.css",
             [],
-            "16.0.11"
+            "17.0.0"
         );
         wp_register_script(
             "tlr-mobile-field",
@@ -362,6 +362,9 @@ final class Texteller
         if (!defined("TLR_INC_PATH")) {
             define("TLR_INC_PATH", TLR_ABSPATH . "/includes");
         }
+	    if (!defined("TLR_LIBS_PATH")) {
+		    define("TLR_LIBS_PATH", TLR_ABSPATH . "/libs");
+	    }
         if (!defined("TLR_ASSETS_PATH")) {
             define("TLR_ASSETS_PATH", TLR_ABSPATH . "/assets");
         }
@@ -378,6 +381,12 @@ final class Texteller
             define(
                 "TLR_ASSETS_URI",
                 plugin_dir_url(TLR_PLUGIN_FILE) . "assets"
+            );
+        }
+		if (!defined("TLR_LIBS_URI")) {
+            define(
+                "TLR_LIBS_URI",
+                plugin_dir_url(TLR_PLUGIN_FILE) . "libs"
             );
         }
     }

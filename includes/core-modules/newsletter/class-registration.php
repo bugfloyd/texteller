@@ -221,7 +221,7 @@ final class Registration
 
 		wp_localize_script( 'tlr-newsletter', 'tlrNewsletterData', [
 		        'intlTelOptions'        =>  [
-			        'utilsURL'              =>  TLR_ASSETS_URI . '/intl-tel-input/build/js/utils.js',
+			        'utilsURL'              =>  TLR_LIBS_URI . '/intl-tel-input/build/js/utils.js',
 			        'preferredCountries'    =>  $intl_tel_input_options['preferred_countries'],
 			        'initialCountry'        =>  $intl_tel_input_options['initial_country'],
 			        'allowDropdown'         =>  $intl_tel_input_options['country_dropdown']

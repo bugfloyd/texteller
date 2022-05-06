@@ -224,7 +224,7 @@ class Admin_Base {
 			'memberDeleteAlert'         =>  __( 'This member will be deleted permanently and could not be recovered. Are you sure?', 'texteller' ),
 			'intlTelOptions'            =>  [
 				'preferredCountries'    =>  $intl_tel_input_options['preferred_countries'],
-				'utilsURL'              =>  TLR_ASSETS_URI . '/intl-tel-input/build/js/utils.js',
+				'utilsURL'              =>  TLR_LIBS_URI . '/intl-tel-input/build/js/utils.js',
 				'initialCountry'        =>  $intl_tel_input_options['initial_country'],
 			],
 

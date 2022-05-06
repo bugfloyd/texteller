@@ -5,7 +5,7 @@ use Texteller as TLR;
 
 defined( 'ABSPATH' ) || exit;
 
-require_once TLR_ABSPATH . '/libs/class-wp-list-table.php';
+require_once TLR_LIBS_PATH . '/class-wp-list-table.php';
 
 abstract class Object_List_Table_Abstract extends TLR\WP_List_Table implements TLR\Interfaces\Object_List_Table
 {

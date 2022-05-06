@@ -1237,7 +1237,7 @@ final class Registration
 			'initialCountry'       =>  $intl_tel_input_options['initial_country'],
 			'allowDropdown'        =>  $intl_tel_input_options['country_dropdown'],
 			'preferredCountries'   =>  $intl_tel_input_options['preferred_countries'],
-			'utilsURL'             =>  TLR_ASSETS_URI . '/intl-tel-input/build/js/utils.js'
+			'utilsURL'             =>  TLR_LIBS_URI . '/intl-tel-input/build/js/utils.js'
 		]);
 
 		wp_enqueue_style('tlr-wc-registration-form', TLR_WC_URI . '/assets/wc-registration-form.css');
