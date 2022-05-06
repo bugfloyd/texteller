@@ -205,7 +205,7 @@ class Gateway_Manager
 									'gateway'       =>  $trigger_data['gateway'],
 									'interface'     =>  $trigger_data['interface'],
 									'content'       =>  $trigger_data['content'],
-									'gateway_data'  =>  $trigger_data['gateway_data'],
+									'gateway_data'  =>  $trigger_data['gateway_data'] ?? [],
 									'recipients'    =>  $current_recipients['members']
 								];
 							}
@@ -216,7 +216,7 @@ class Gateway_Manager
 									'gateway'       =>  $trigger_data['gateway'],
 									'interface'     =>  $trigger_data['interface'],
 									'content'       =>  $trigger_data['content'],
-									'gateway_data'  =>  $trigger_data['gateway_data'],
+									'gateway_data'  =>  $trigger_data['gateway_data'] ?? [],
 									'recipients'    =>  $current_recipients['numbers']
 								];
 							}
