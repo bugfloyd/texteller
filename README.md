@@ -113,8 +113,8 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   There’s more to come soon!  
 
 ### REQUIREMENTS
-Texteller needs PHP version 7.1 or above to give you the lite and smooth experience with the least effect on your website’s performance.  
-You should also have a WordPress version 5.0 or above to use the plugin and if you are planning to use the WooCommerce integration features, you will need WooCommerce version 3.7 or above.  
+Texteller needs PHP version 7.4 or above to give you the lite and smooth experience with the least effect on your website’s performance.  
+You should also have a WordPress version 5.0 or above to use the plugin and if you are planning to use the WooCommerce integration features, you will need WooCommerce version 6.1 or above.  
 To enable internationalization features like local calendar and date types, PHP Intl extension should be installed on the server.  
 
 

@@ -7,7 +7,7 @@
  * Author: Yashar Hosseinpour
  * Text Domain: texteller
  * Requires at least: 5.3
- * Tested up to: 5.4.1
+ * Tested up to: 6.0
  * Requires PHP: 7.4
  * WC requires at least: 6.1
  * WC tested up to: 6.4.1

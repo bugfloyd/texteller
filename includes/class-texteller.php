@@ -199,7 +199,7 @@ final class Texteller
         if (true !== $compatibility_status) {
             deactivate_plugins(TLR_PLUGIN_FILE);
             if ($compatibility_status === -1) {
-                die(__("Texteller requires PHP 7.0 or higher.", "texteller"));
+                die(__("Texteller requires PHP 7.4 or higher.", "texteller"));
             } elseif ($compatibility_status === -2) {
                 die(
                     __(
@@ -271,7 +271,7 @@ final class Texteller
 
     private static function is_environment_compatible()
     {
-        if (version_compare(PHP_VERSION, "7.0", "<")) {
+        if (version_compare(PHP_VERSION, "7.4", "<")) {
             return -1;
         }
         if (version_compare($GLOBALS["wp_version"], "5.3", "<=")) {
