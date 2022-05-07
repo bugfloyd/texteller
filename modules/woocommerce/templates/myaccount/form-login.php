@@ -11,9 +11,11 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 3.6.0
+ * @package WooCommerce\Templates
+ * @version 4.1.0
  */
+
+use Texteller\Modules\WooCommerce\Registration;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -27,7 +29,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 	<div class="u-column1 col-1">
 
-		<?php endif; ?>
+<?php endif; ?>
 
 		<h2><?php esc_html_e( 'Login', 'woocommerce' ); ?></h2>
 
@@ -68,7 +70,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 		</form>
 
-		<?php if ( 'yes' === get_option( 'woocommerce_enable_myaccount_registration' ) ) : ?>
+<?php if ( 'yes' === get_option( 'woocommerce_enable_myaccount_registration' ) ) : ?>
 
 	</div>
 
@@ -90,7 +92,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 			<?php endif; ?>
 
             <?php
-            \Texteller\Modules\WooCommerce\Registration::render_account_registration_fields();
+            Registration::render_account_registration_fields();
             ?>
             <div class="clear" style="clear:both;"></div>
 
@@ -105,11 +107,11 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 				$by = get_option( 'tlr_wc_registration_new_customer_notification_base_gateway', 'both' );
 				if ( $by === 'both' ) {
-					$password_notice = __( 'A password will be sent to you, by email and SMS.', 'texteller' );
+					$password_notice = __( 'A link to set a new password will be sent to you, by email and SMS.', 'texteller' );
 				} elseif ( $by === 'texteller' ) {
-					$password_notice = __( 'A password will be sent to you.', 'texteller' );
+					$password_notice = __( 'A link to set a new password will be sent to your phone.', 'texteller' );
 				} else {
-					$password_notice = __('A password will be sent to your email address.', 'woocommerce');
+					$password_notice = __('A link to set a new password will be sent to your email address.', 'woocommerce');
 				}
 				?>
 
@@ -119,7 +121,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 			<?php do_action( 'woocommerce_register_form' ); ?>
 
-			<p class="woocommerce-FormRow form-row">
+			<p class="woocommerce-form-row form-row">
 				<?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
 				<button type="submit" class="woocommerce-Button button" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'Register', 'woocommerce' ); ?></button>
 			</p>

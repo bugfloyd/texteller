@@ -15,6 +15,8 @@
  * @version 3.5.0
  */
 
+use Texteller\Modules\WooCommerce\Registration;
+
 defined( 'ABSPATH' ) || exit;
 
 do_action( 'woocommerce_before_edit_account_form' ); ?>
@@ -40,9 +42,9 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
 	<div class="clear"></div>
 
 	<?php
-    \Texteller\Modules\WooCommerce\Registration::render_account_edit_fields(
-            get_option( 'tlr_wc_registration_form_fields' ),
-            get_option( 'tlr_wc_registration_fields_class' ),
+    Registration::render_account_edit_fields(
+            get_option( 'tlr_wc_registration_form_fields', [] ),
+            get_option( 'tlr_wc_registration_fields_class', [] ),
             $user
     );
 	?>
