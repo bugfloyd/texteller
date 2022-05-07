@@ -823,7 +823,7 @@ final class Registration
 	public static function override_process_login()
 	{
 		// The global form-login.php template used `_wpnonce` in template versions < 3.3.0.
-		$nonce_value = $_REQUEST['woocommerce-login-nonce'] ?? wc_get_var( $_REQUEST['_wpnonce'], '' );
+		$nonce_value = wc_get_var( $_REQUEST['woocommerce-login-nonce'], wc_get_var( $_REQUEST['_wpnonce'], '' ) ); // @codingStandardsIgnoreLine.
 
 		if ( isset( $_POST['login'], $_POST['username'], $_POST['password'] ) && wp_verify_nonce( $nonce_value, 'woocommerce-login' ) ) {
 
@@ -871,15 +871,13 @@ final class Registration
 				$user = wp_signon( apply_filters( 'woocommerce_login_credentials', $creds ), is_ssl() );
 
 				if ( is_wp_error( $user ) ) {
-					$message = $user->get_error_message();
-
 					// <Modified> Prevent user_login to be revealed by attempting to log in using the mobile number, due to privacy concerns.
+					$message = $user->get_error_message();
 					if ( isset( $mobile_user, $mobile_number ) ) {
 						$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $mobile_number ) . '</strong>', $message );
 					}
-					// </Modified>
-
 					$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', $message );
+					// </Modified>
 					throw new Exception( $message );
 				} else {
 
@@ -911,7 +909,6 @@ final class Registration
 	public static function override_process_lost_password()
 	{
 		if ( isset( $_POST['wc_reset_password'], $_POST['user_login'] ) ) {
-
 			$nonce_value = wc_get_var( $_REQUEST['woocommerce-lost-password-nonce'], wc_get_var( $_REQUEST['_wpnonce'], '' ) ); // @codingStandardsIgnoreLine.
 
 			if ( ! wp_verify_nonce( $nonce_value, 'lost_password' ) ) {
@@ -944,7 +941,9 @@ final class Registration
 
 		if ( empty( $login ) ) {
 
-			wc_add_notice( __( 'Enter a username, mobile number or email address.', 'texteller' ), 'error' ); //<Modified>
+			// <Modified>
+			wc_add_notice( __( 'Enter a username, mobile number or email address.', 'texteller' ), 'error' );
+            //</Modified>
 
 			return false;
 
@@ -967,7 +966,7 @@ final class Registration
 		}
 		// </Modified>
 
-		do_action( 'lostpassword_post', $errors );
+		do_action( 'lostpassword_post', $errors, $user_data );
 
 		if ( $errors->get_error_code() ) {
 			wc_add_notice( $errors->get_error_message(), 'error' );
@@ -976,7 +975,9 @@ final class Registration
 		}
 
 		if ( ! $user_data ) {
-			wc_add_notice( __( 'Invalid username, mobile number or email.', 'texteller' ), 'error' ); //<Modified>
+			// <Modified>
+			wc_add_notice( __( 'Invalid username, mobile number or email.', 'texteller' ), 'error' );
+			// </Modified>
 
 			return false;
 		}
@@ -1014,7 +1015,7 @@ final class Registration
 		WC()->mailer(); // Load email classes.
 		do_action( 'woocommerce_reset_password_notification', $user_login, $key );
 
-
+        // <Modified>
 		/**
 		 * Fires after a reset-password key is generated for a WC customer
          *
@@ -1024,6 +1025,7 @@ final class Registration
          * @param string $key Generated RP key
 		 */
 		do_action( 'tlr_wc_reset_password_notification', $user_data->ID, $key );
+		// </Modified>
 
 		return true;
 
