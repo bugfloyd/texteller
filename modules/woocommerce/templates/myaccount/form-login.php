@@ -105,7 +105,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 			<?php else :
 
-				$by = get_option( 'tlr_wc_registration_new_customer_notification_base_gateway', 'both' );
+				$by = get_option( 'tlr_wc_registration_new_customer_notification_base_gateway', 'wc_default' );
 				if ( $by === 'both' ) {
 					$password_notice = __( 'A link to set a new password will be sent to you, by email and SMS.', 'texteller' );
 				} elseif ( $by === 'texteller' ) {

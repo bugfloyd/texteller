@@ -58,14 +58,10 @@ final class Notifications
 
 			case 'lost_customer':
 				$member_tags  = TLR\tlr_get_base_tags_values_array('member', $object);
-				$lost_customer_tags_values = [];
 
-				if ( isset( $extra_tags['rp_key'], $extra_tags['user_id'] ) ) {
-					$lost_customer_tags_values = [
-						'rp_link'    =>  esc_url( trailingslashit(wc_get_account_endpoint_url('')) )
-						                 . "?key={$extra_tags['rp_key']}&id=" . rawurlencode($extra_tags['user_id'] )
-					];
-				}
+				$lost_customer_tags_values = [
+					'rp_link'       =>  $extra_tags['rp_link'] ?? ''
+				];
 
 				$tags->add_tag_type_data('lost_customer', array_merge($member_tags,$lost_customer_tags_values));
 				break;
@@ -74,6 +70,7 @@ final class Notifications
 				$member_tags  = TLR\tlr_get_base_tags_values_array('member', $object);
 				$customer_tags_values = [
 					'login_link'    =>  esc_url( trailingslashit( wc_get_account_endpoint_url( '' ) ) ),
+					'rp_link'       =>  $extra_tags['rp_link'] ?? ''
 				];
 
 				if ( isset( $extra_tags['password'] ) ) {
@@ -146,7 +143,6 @@ final class Notifications
 					$member_id = $object->get_id();
 				}
 				return !empty($member_id) ? [ 'members' => [$member_id] ] : [];
-				break;
 
 			case 'order_customer':
 				if ( is_a($object,'\WC_Order') ) {
@@ -154,7 +150,6 @@ final class Notifications
 					$member_id = TLR\tlr_get_member_id( $object->get_customer_id(), 'user_id' );
 				}
 				return !empty($member_id) ? [ 'members' => [$member_id] ] : [];
-				break;
 
 			case 'order_admin':
 				if ( is_a($object,'\WC_Order') ) {
@@ -198,13 +193,25 @@ final class Notifications
 			'object'                =>  $member
 		] );
 
-		if ( 'wc_default' !== get_option('tlr_wc_registration_new_customer_notification_base_gateway', 'both') ) {
+		$gateway_option = get_option('tlr_wc_registration_new_customer_notification_base_gateway', 'wc_default');
+
+		if ( 'wc_default' !== $gateway_option ) {
+			$rp_link = '';
+			if ('yes' === get_option( 'woocommerce_registration_generate_password' ) && 'both' !== $gateway_option) {
+				// Generate a magic link so user can set initial password.
+				$user = get_user_by('ID', $customer_id);
+				$key = get_password_reset_key( $user );
+				if ( ! is_wp_error( $key ) ) {
+					$action                 = 'newaccount';
+					$rp_link = wc_get_account_endpoint_url( 'lost-password' ) . "?action=$action&key=$key&login=" . rawurlencode( $user->user_login );
+				}
+			}
 			TLR\Gateway_Manager::send_notification( [
 				'notification_class'    =>  self::class,
 				'tag_type'              =>  'new_customer',
 				'trigger'               =>  'wc_registration_new_customer_new_customer_rp',
 				'object'                =>  $member,
-				'extra_tags'            =>  !empty($new_customer_data['user_pass']) ? [ 'password' => $new_customer_data['user_pass'] ] : []
+				'extra_tags'            =>  [ 'rp_link' => $rp_link ]
 			] );
 		}
 
@@ -239,6 +246,7 @@ final class Notifications
 		}
 
 		$member_id = TLR\tlr_get_member_id( $user_id, 'user_id');
+		$rp_link = esc_url( add_query_arg( array( 'key' => $key, 'id' => $user_id ), wc_get_endpoint_url( 'lost-password', '', wc_get_page_permalink( 'myaccount' ) ) ) );
 
 		if ( $member_id ) {
 			TLR\Gateway_Manager::send_notification( [
@@ -246,7 +254,7 @@ final class Notifications
 				'tag_type'              =>  'lost_customer',
 				'trigger'               =>  'wc_lost_pw_rp_link',
 				'object'                =>  new TLR\Member($member_id),
-				'extra_tags'            =>  [ 'rp_key' => $key, 'user_id' => $user_id ]
+				'extra_tags'            =>  [ 'rp_link' => $rp_link, 'user_id' => $user_id ]
 			] );
 		}
 	}

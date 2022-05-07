@@ -49,7 +49,7 @@ final class Registration
 		add_action( 'woocommerce_thankyou', [ self::class, 'thankyou_init_verify'] );
 
 		// MISC
-		add_filter( 'woocommerce_email_enabled_customer_new_account', [ self::class, 'control_new_customer_email' ] );
+		add_action( 'woocommerce_email', [ self::class, 'control_new_customer_email' ] );
 		add_filter( 'woocommerce_email_enabled_customer_reset_password', [ self::class, 'control_lost_customer_email' ] );
 		add_filter( 'tlr_registration_origins', [self::class, 'add_registration_origin' ], 15, 1 );
 		add_action( 'wp_enqueue_scripts', [self::class, 'enqueue_assets'] );
@@ -347,16 +347,16 @@ final class Registration
         }
     }
 
-	public static function control_new_customer_email( $enabled )
+	public static function control_new_customer_email( $email_class )
 	{
 		if ( ! self::is_registration_enabled() ) {
-			return $enabled;
+			return;
 		}
 
-		if ( 'texteller' !== get_option('tlr_wc_registration_new_customer_notification_base_gateway', 'both') ) {
-			return $enabled;
+		if ( 'texteller' !== get_option('tlr_wc_registration_new_customer_notification_base_gateway', 'wc_default') ) {
+			return;
 		} else {
-			return false;
+			remove_action( 'woocommerce_created_customer_notification', [$email_class, 'customer_new_account'], 10, 3 );
 		}
 	}
 

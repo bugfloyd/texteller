@@ -57,7 +57,7 @@ final class Options implements TLR\Interfaces\Options
 		];
 
 		$new_customer_tags = [
-			'password'     =>  __('password', 'texteller'),
+			'rp_link'     =>  __('WC set password link', 'texteller'),
 		];
 
 		$lost_customer_tags = [
@@ -264,7 +264,7 @@ final class Options implements TLR\Interfaces\Options
 				'page'          =>  'tlr_woocommerce',
 				'section'       =>  'wc_registration_behaviour',
 				'title'         =>  __('Base Gateway for New Customer Notification', 'texteller'),
-				'field_args'    =>  ['default'=>'both'],
+				'field_args'    =>  ['default'=>'wc_default'],
 				'desc'          =>  __('This will effect new customers who register via My-Account and Checkout pages.', 'texteller')
 				                    . ' ' . __('By default, WooCommerce sends an email notification to the new registered customers, which contains their username and password.', 'texteller'),
 				'helper'        =>  __( 'In case any option but Email (WooCommerce default) is chosen, the notification message should be customized from Registration and Login Notifications tab.', 'texteller' ),
@@ -623,25 +623,36 @@ final class Options implements TLR\Interfaces\Options
 				'params'        =>  [
 					'label'                 =>  __( 'Send notifications when a new costumer is registered', 'texteller' ),
 					'tag_type'              =>  'customer',
-					'trigger_recipients'    =>  [ 'new_customer' => __( 'New Customer', 'texteller' ) ]
+					'trigger_recipients'    =>  [ 'new_customer' => __( 'New Customer', 'texteller' ) ],
+					'recipient_types'       =>  ['staff', 'members', 'numbers']
 				]
 			],
 			[
 				'id'            =>  'tlr_trigger_wc_registration_new_customer_new_customer_rp',
-				'title'         =>  __( 'Password Message for New Customers', 'texteller' ),
+				'title'         =>  __( 'Set-password & Welcome Message for new Customers', 'texteller' ),
 				'page'          =>  'tlr_woocommerce',
 				'section'       =>  'wc_registration_notifications',
 				'field_args'    =>  [ 'default' => [] ],
-				'helper'        =>  sprintf( /* translators: %s: Registration & Login Behaviour */
-					__('In order for this notification message to be sent, the chosen option in the "Base Gateway for New Customer Notification" section from %s tab, must include "Texteller message".', 'texteller'),
+				'desc'          =>  sprintf( /* translators: %s: WooCommerce settings */
+					__('In order to include set-password link in this message, sending password links for new customers should be enabled from %s page.', 'texteller'),
 					sprintf(
-						'<a href="' . admin_url('admin.php?page=tlr-options&tab=tlr_woocommerce&section=wc_registration_behaviour') . '">%s</a>',
-						__('Registration & Login Behaviour', 'texteller')
+						'<a href="'. admin_url('admin.php?page=wc-settings&tab=account')
+						.'" target="_blank">%s</a>',
+						__('WooCommerce settings', 'texteller')
 					)
 				),
+				'helper'        =>  sprintf( /* translators: %s: Registration & Login Behaviour */
+					                    __('In order for this notification message to be sent, the chosen option in the "Base Gateway for New Customer Notification" section from %s tab, must include "Texteller message".', 'texteller'),
+					                    sprintf(
+											'<a href="' . admin_url('admin.php?page=tlr-options&tab=tlr_woocommerce&section=wc_registration_behaviour') . '">%s</a>',
+											__('Registration & Login Behaviour', 'texteller')
+					                    )
+				                    )
+				                    .'<br>' .
+				                    __( 'Note: If "Email and Texteller message" is selected, set password links will not work in Texteller messages.', 'texteller' ),
 				'type'          =>  'notification',
 				'params'        =>  [
-					'label'                 =>  __( 'Send password message on new customer registration', 'texteller' ),
+					'label'                 =>  __( 'Send welcome and set-password message on new customer registration', 'texteller' ),
 					'recipient_types'       =>  ['trigger'],
 					'tag_type'              =>  'new_customer',
 					'trigger_recipients'    =>  [ 'new_customer' => __( 'New Customer', 'texteller' ) ]
