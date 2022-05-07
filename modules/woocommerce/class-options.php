@@ -432,30 +432,6 @@ final class Options implements TLR\Interfaces\Options
 				]
 			],
 			[
-				'id'            =>  'tlr_wc_registration_simple_passwords',
-				'page'          =>  'tlr_woocommerce',
-				'section'       =>  'wc_registration_behaviour',
-				'title'         =>  __('Mobile Friendly Password', 'texteller'),
-				'field_args'    =>  [ 'default' => '' ],
-				'desc'          =>  __('If this option is enabled, a 5 digit random number will be used as each password.', 'texteller').
-				                    ' ' .
-				                    sprintf( /* translators: %s: WooCommerce settings */
-					                    __('In order to activate this option, automatic password generation for new accounts should be enabled from %s page.', 'texteller'),
-					                    sprintf(
-					                    	'<a href="'. admin_url('admin.php?page=wc-settings&tab=account')
-						                    .'" target="_blank">%s</a>',
-						                    __('WooCommerce settings', 'texteller')
-					                    )
-				                    ),
-				'helper'        =>  __('Enabling this option is NOT RECOMMENDED. Use it at your own risk.', 'texteller'),
-				'type'          =>  'input',
-				'params'        =>  [
-					'pre'   =>  [ 'woocommerce_registration_generate_password' => 'yes' ], // todo: pre
-					'label' =>  __( 'Generate simple numeric passwords for new customers', 'texteller'),
-					'type'  =>  'checkbox'
-				]
-			],
-			[
 				'id'            =>  'tlr_wc_registration_update_customer_names',
 				'title'         =>  __('Customer Names Update', 'texteller'),
 				'page'          =>  'tlr_woocommerce',

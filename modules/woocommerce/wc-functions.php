@@ -38,7 +38,7 @@ if ( ! function_exists( 'wc_create_new_customer' ) ) {
 		}
 
 		if ( email_exists( $email ) ) {
-			return new WP_Error( 'registration-error-email-exists', apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ), $email ) );
+			return new WP_Error( 'registration-error-email-exists', apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. <a href="#" class="showlogin">Please log in.</a>', 'woocommerce' ), $email ) );
 		}
 
 		$registration_module = \Texteller\Registration_Module::get_instance();
@@ -57,6 +57,7 @@ if ( ! function_exists( 'wc_create_new_customer' ) ) {
 					$username = $registration_module->generate_username( 'rand_numbers' );
 				} else {
 					$username = wc_create_new_customer_username( $email, $args );
+					$username = sanitize_user( $username );
 				}
 			} else {
 				$username = $registration_module->generate_username( $username_generator, 'tlr_wc_registration_username_generator' );
@@ -75,17 +76,7 @@ if ( ! function_exists( 'wc_create_new_customer' ) ) {
 		$password_generated = false;
 
 		if ( 'yes' === get_option( 'woocommerce_registration_generate_password' ) && empty( $password ) ) {
-
-			if ( 'yes' === get_option( 'tlr_wc_registration_simple_passwords', false ) ) {
-				try {
-					$password = random_int( 100000, 999999 );
-				} catch (\Exception $e) {
-					\Texteller\tlr_write_log( 'Texteller Error while generating new simple password.' . ' ' . $e->getMessage() );
-					$password = rand( 100000, 999999 );
-				}
-			} else {
-				$password           = wp_generate_password();
-			}
+			$password           = wp_generate_password();
 			$password_generated = true;
 		}
 
