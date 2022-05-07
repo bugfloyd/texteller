@@ -28,7 +28,7 @@ final class Base {
 	 */
 	public static function init()
 	{
-		if ( !defined('WC_VERSION') || !version_compare( WC_VERSION, '3.7', ">=" ) ) {
+		if ( !defined('WC_VERSION') || !version_compare( WC_VERSION, '6.1', ">=" ) ) {
 			return;
 		}
 		new Options();
