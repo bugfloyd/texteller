@@ -823,7 +823,7 @@ final class Registration
 	public static function override_process_login()
 	{
 		// The global form-login.php template used `_wpnonce` in template versions < 3.3.0.
-		$nonce_value = TLR\tlr_get_var( $_REQUEST['woocommerce-login-nonce'], wc_get_var( $_REQUEST['_wpnonce'], '' ) ); // @codingStandardsIgnoreLine.
+		$nonce_value = $_REQUEST['woocommerce-login-nonce'] ?? wc_get_var( $_REQUEST['_wpnonce'], '' );
 
 		if ( isset( $_POST['login'], $_POST['username'], $_POST['password'] ) && wp_verify_nonce( $nonce_value, 'woocommerce-login' ) ) {
 
@@ -1129,7 +1129,7 @@ final class Registration
 
 	public static function render_account_registration_fields()
 	{
-	    $fields = $fields = TLR\get_form_fields('tlr_wc_registration_form_fields', Options::class );
+	    $fields = TLR\get_form_fields('tlr_wc_registration_form_fields', Options::class );
 	    $fields_class = get_option('tlr_wc_registration_account_fields_class', []);
 	    if ( empty($fields_class) ) {
 		    $fields_class = [
