@@ -80,7 +80,8 @@ class Message_List_Table extends Object_List_Table_Abstract
     {
 	    $gateways = [
 		    'melipayamak'   =>  __( 'Melipayamak', 'texteller' ),
-		    'twilio'        =>  __( 'Twilio', 'texteller' )
+		    'twilio'        =>  __( 'Twilio', 'texteller' ),
+		    'spryng'        =>  __( 'Spryng', 'texteller' ),
 	    ];
 	    // todo
 
