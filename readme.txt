@@ -3,6 +3,7 @@ Contributors: yashar_hv
 Tags: sms,mobile registration,phone login,sms notifications,mobile verification,woocommerce,send sms,bulk sms,newsletter,text message,mobile login,receive sms
 Requires at least: 5.3
 Tested up to: 6.0
+Stable tag: 1.0
 Requires PHP: 7.4
 Stable tag: trunk
 License: GPLv2 or later
