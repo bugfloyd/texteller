@@ -347,7 +347,7 @@ html[dir=rtl] .save_member {float:left}
     .action-edit-wrap {
         border: 1px solid #cccccc;
         border-radius: 3px;
-        background-color: #f9f4ff;
+        background-color: #f4f8ff;
     }
         .action-form {
             display:grid;
