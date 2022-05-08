@@ -27,7 +27,8 @@ class REST_Controller {
 				],
 				[
 					'methods'   =>  'GET,POST',
-					'callback'  =>  [ self::class, 'init_gateway_receive' ]
+					'callback'  =>  [ self::class, 'init_gateway_receive' ],
+					'permission_callback' => '__return_true'
 				]
 			]
 		);
@@ -46,7 +47,8 @@ class REST_Controller {
 				],
 				[
 					'methods'   =>  'GET,POST',
-					'callback'  =>  [ self::class, 'init_gateway_delivery' ]
+					'callback'  =>  [ self::class, 'init_gateway_delivery' ],
+					'permission_callback' => '__return_true'
 				]
 			]
 		);
