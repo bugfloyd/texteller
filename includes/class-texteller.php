@@ -57,9 +57,9 @@ final class Texteller
      */
     private function __construct()
     {
-	    $this->define_constants();
+        $this->define_constants();
 
-	    // Register plugin autoload
+        // Register plugin autoload
         try {
             spl_autoload_register([self::class, "autoload"], false);
         } catch (Exception $e) {
@@ -78,6 +78,14 @@ final class Texteller
         add_filter(
             "plugin_row_meta",
             [self::class, "plugin_desc_links"],
+            10,
+            2
+        );
+
+        // add plugin update notice
+        add_action(
+            "in_plugin_update_message-texteller/texteller.php",
+            [self::class, "show_upgrade_notice"],
             10,
             2
         );
@@ -120,6 +128,29 @@ final class Texteller
         return (array) $links;
     }
 
+	/**
+	 * Render important update notice when there is some
+	 * @since 1.0
+	 * @param $currentPluginMetadata
+	 * @param $newPluginMetadata
+	 *
+	 * @return void
+	 */
+	public static function show_upgrade_notice(
+        $currentPluginMetadata,
+        $newPluginMetadata
+    ) {
+        if (
+            isset($newPluginMetadata->upgrade_notice) &&
+            strlen(trim($newPluginMetadata->upgrade_notice)) > 0
+        ) {
+            echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>' .
+                esc_html__("Important Upgrade Notice:", "texteller") .
+                "</strong> ";
+            echo esc_html($newPluginMetadata->upgrade_notice), "</p>";
+        }
+    }
+
     /**
      * Show action links on the plugins screen.
      *
@@ -147,14 +178,14 @@ final class Texteller
         // Intl Tel Input
         wp_register_script(
             "tlr-intl-tel-input",
-	        TLR_LIBS_URI . "/intl-tel-input/build/js/intlTelInput.min.js",
+            TLR_LIBS_URI . "/intl-tel-input/build/js/intlTelInput.min.js",
             [],
             "17.0.0",
             true
         );
         wp_register_style(
             "tlr-intl-tel-input",
-	        TLR_LIBS_URI . "/intl-tel-input/build/css/intlTelInput.min.css",
+            TLR_LIBS_URI . "/intl-tel-input/build/css/intlTelInput.min.css",
             [],
             "17.0.0"
         );
@@ -362,9 +393,9 @@ final class Texteller
         if (!defined("TLR_INC_PATH")) {
             define("TLR_INC_PATH", TLR_ABSPATH . "/includes");
         }
-	    if (!defined("TLR_LIBS_PATH")) {
-		    define("TLR_LIBS_PATH", TLR_ABSPATH . "/libs");
-	    }
+        if (!defined("TLR_LIBS_PATH")) {
+            define("TLR_LIBS_PATH", TLR_ABSPATH . "/libs");
+        }
         if (!defined("TLR_ASSETS_PATH")) {
             define("TLR_ASSETS_PATH", TLR_ABSPATH . "/assets");
         }
@@ -383,11 +414,8 @@ final class Texteller
                 plugin_dir_url(TLR_PLUGIN_FILE) . "assets"
             );
         }
-		if (!defined("TLR_LIBS_URI")) {
-            define(
-                "TLR_LIBS_URI",
-                plugin_dir_url(TLR_PLUGIN_FILE) . "libs"
-            );
+        if (!defined("TLR_LIBS_URI")) {
+            define("TLR_LIBS_URI", plugin_dir_url(TLR_PLUGIN_FILE) . "libs");
         }
     }
 
