@@ -365,7 +365,8 @@ final class Options implements TLR\Interfaces\Options
 	{
 	    $available_gateways = [
             'twilio'        =>  'Twilio',
-            'melipayamak'   =>  'Melipayamak'
+            'melipayamak'   =>  'Melipayamak',
+		    'kavenegar'     =>  'Kavenegar',
         ];
 
         /**

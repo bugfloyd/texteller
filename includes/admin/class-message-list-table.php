@@ -79,6 +79,7 @@ class Message_List_Table extends Object_List_Table_Abstract
 	private function set_gateways()
     {
 	    $gateways = [
+		    'kavenegar'     =>  __( 'Kavenegar', 'texteller' ),
 		    'melipayamak'   =>  __( 'Melipayamak', 'texteller' ),
 		    'twilio'        =>  __( 'Twilio', 'texteller' )
 	    ];
