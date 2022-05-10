@@ -89,7 +89,7 @@ class Base implements TLR\Interfaces\Gateway
 		$recid = isset($response['Value']) ? $response['Value'] : '';
 		$is_sent = isset($response['RetStatus']) && 1 === $response['RetStatus'] && strlen( $recid ) > 10;
 
-		return $is_sent ?  [ 'recid' => $recid ] : false;
+		return $is_sent ? ['data' => [ 'recid' => $recid ]] : false;
 	}
 
 	public function dedicated_send( string $text, array $numbers )
@@ -118,7 +118,7 @@ class Base implements TLR\Interfaces\Gateway
 		$recid = isset($response['Value']) ? $response['Value'] : '';
 		$is_sent = isset($response['RetStatus']) && 1 === $response['RetStatus'] && strlen( $recid ) > 10;
 
-		return $is_sent ?  [ 'recid' => $recid ] : false;
+		return $is_sent ? ['data' => [ 'recid' => $recid ]]   : false;
 	}
 
 	public function get_credit()

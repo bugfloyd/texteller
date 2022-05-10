@@ -193,7 +193,7 @@ class Base implements TLR\Interfaces\Gateway
                 ),
             ]);
             $message_sid = $MessageInstance->sid;
-            return $message_sid ? ["sid" => $message_sid] : false;
+            return $message_sid ? ['data' => ["sid" => $message_sid]] : false;
         } catch (TwilioException $e) {
             TLR\tlr_write_log(
                 "Twilio: An error occurred. | " . $e->getMessage()

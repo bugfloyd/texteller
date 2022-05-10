@@ -120,8 +120,9 @@ class Message_Data_Store implements Interfaces\Object_Data_Store {
 		$update = $wpdb->update(
 			$db_prefix . 'tlr_messages',
 			[
-				'message_status'        => $message->get_status(),
-				'message_gateway_data'  => serialize( $message->get_gateway_data() )
+				'message_status'            => $message->get_status(),
+				'message_gateway_data'      => serialize( $message->get_gateway_data() ),
+				'message_interface_number'  =>  $message->get_interface_number()
 			],
 			[
 				'ID'    =>  $id
