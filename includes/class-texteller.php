@@ -145,8 +145,6 @@ final class Texteller
             strlen(trim($newPluginMetadata->upgrade_notice)) > 0
         ) {
 			$notice = $newPluginMetadata->upgrade_notice;
-			$notice = str_replace('<p>', '', $notice);
-	        $notice = str_replace('</p>', '', $notice);
             echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>' .
                 esc_html__("Important Upgrade Notice:", "texteller") .
                 "</strong> ";
