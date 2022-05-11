@@ -108,6 +108,7 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Advanced member importer tool to automatically register existing site users as a linked member
 
 ### SUPPORTED GATEWAYS 
+*   [Spryng](https://www.spryng.nl/)
 *   [Twilio](https://www.twilio.com/)
 *   [Melipayamak](https://www.melipayamak.com/) (Dedicated and shared line)
 *   There’s more to come soon!  

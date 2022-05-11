@@ -1,3 +1,8 @@
+= 1.1.0 =
+* New: New gateway! Spryng.nl full support: Send SMS, choose originator, get delivery reports
+* Tweak: Now the plugin is able to store additional data coming from gateways while sending messages
+* Tweak: WooCommerce integration tested up to version 6.5.0
+
 = 1.0 =
 * New: Tested the plugin up to WordPress 6.0
 * New: Now Texteller supports WooCommerce up to 6.4.1

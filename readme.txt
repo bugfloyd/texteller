@@ -3,9 +3,8 @@ Contributors: yashar_hv
 Tags: sms,mobile registration,phone login,sms notifications,mobile verification,woocommerce,send sms,bulk sms,newsletter,text message,mobile login,receive sms
 Requires at least: 5.3
 Tested up to: 6.0
-Stable tag: 1.0
-Requires PHP: 7.4
 Stable tag: trunk
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -116,7 +115,8 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Control verification codes’ lifetime
 *   Advanced member importer tool to automatically register existing site users as a linked member
 
-# SUPPORTED GATEWAYS #  
+# SUPPORTED GATEWAYS #
+*   [Spryng](https://www.spryng.nl/)
 *   [Twilio](https://www.twilio.com/)
 *   [Melipayamak](https://www.melipayamak.com/) (Dedicated and shared line)
 *   There’s more to come soon!  
@@ -162,6 +162,11 @@ Of course! More plugin integration will be available in future updates. Some not
 
 == Changelog ==
 
+= 1.1.0 =
+* New: New gateway! Spryng.nl full support: Send SMS, choose originator, get delivery reports
+* Tweak: Now the plugin is able to store additional data coming from gateways while sending messages
+* Tweak: WooCommerce integration tested up to version 6.5.0
+
 = 1.0 =
 * New: Tested the plugin up to WordPress 6.0
 * New: Now Texteller supports WooCommerce up to 6.4.1
@@ -201,6 +206,7 @@ Of course! More plugin integration will be available in future updates. Some not
 Initial release
 
 ## Upgrade Notice ##
-### 1.0 ###
-Now Texteller supports WordPress up to version 6.0 and WooCommerce 6.4.1!
-Increased minimum required PHP version to 7.4 and minimum required WooCommerce version to 6.1
+### 1.1.0 ###
+Now Texteller supports WooCommerce 6.5!
+New gateway: Spryng
+IMPORTANT: If you have PHP version below 7.4, you can download plugin version 0.1.3 from bit.ly/3yJQRUv which supports PHP 7.1 and above
