@@ -1,3 +1,6 @@
+= 1.1.1 =
+* Fix: Minor formatting issue in upgrade notices
+
 = 1.1.0 =
 * New: New gateway! Spryng.nl full support: Send SMS, choose originator, get delivery reports
 * Tweak: Now the plugin is able to store additional data coming from gateways while sending messages
@@ -46,7 +49,7 @@
 
 = 0.1.1 =
 * Tweak: Added plugin links on Admin Dashboard: Plugins
-* Fix: Improved some of the translatable texts
+* Fix: Improved some translatable texts
 
 = 0.1.0 =
 Initial release

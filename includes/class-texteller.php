@@ -24,7 +24,7 @@ final class Texteller
      */
     protected static ?Texteller $instance = null;
 
-    public static string $version = "1.1.0";
+    public static string $version = "1.1.1";
 
     /**
      * Cloning is forbidden.
@@ -144,10 +144,13 @@ final class Texteller
             isset($newPluginMetadata->upgrade_notice) &&
             strlen(trim($newPluginMetadata->upgrade_notice)) > 0
         ) {
+			$notice = $newPluginMetadata->upgrade_notice;
+			$notice = str_replace('<p>', '', $notice);
+	        $notice = str_replace('</p>', '', $notice);
             echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>' .
                 esc_html__("Important Upgrade Notice:", "texteller") .
                 "</strong> ";
-            echo esc_html($newPluginMetadata->upgrade_notice), "</p>";
+            echo esc_html($notice), "</p>";
         }
     }
 

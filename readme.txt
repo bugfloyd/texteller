@@ -162,6 +162,9 @@ Of course! More plugin integration will be available in future updates. Some not
 
 == Changelog ==
 
+= 1.1.1 =
+* Fix: Minor formatting issue in upgrade notices
+
 = 1.1.0 =
 * New: New gateway! Spryng.nl full support: Send SMS, choose originator, get delivery reports
 * Tweak: Now the plugin is able to store additional data coming from gateways while sending messages
@@ -186,27 +189,9 @@ Of course! More plugin integration will be available in future updates. Some not
 * Fix: PHP warning while formatting datetime
 * Fix: PHP notices while sending notifications when a gateway does not have extra data
 
-= 0.1.3 =
-* New: Added a new tool to import members from users registered via third-party plugins
-* New: Added a new metabox to WooCommerce Edit Order page for site admins to view member's number and send text messages directly from order screen
-* New: Introduced two new hooks to add custom gateways: 'tlr_gateway_class_name' & 'tlr_available_gateways'
-* Tweak: Improved plugin cron jobs structure
-* Fix: Conflict on the pages with multiple mobile number fields (e.g. WC Account Page with a Newsletter widget in the footer)
-* Fix: Removed some redundant codes and the misc directory
-* Fix: Removed plugin system log messages from translatable texts
-* Fix: Now we use a custom array_key_first() function to be compatible with PHP < 7.3 & keep minimum requirement as 7.1
-* Fix: Wrong email error when registering from wp-login.php on a Non-English sites
-* Fix: UI glitch in the form fields on WC pages
-* Fix: Fixed a PHP warning while deleting members, when there is no defined staff on the site
-* Fix: Wrong URL for options page in the description on "Dashboard Add New User" screen
-* Fix: Empty values for some member tags in "WordPress New User" notifications
-* Fix: Improved tag insertion by click, for notification options with multiple trigger recipients
-
 = 0.1.0 =
 Initial release
 
 ## Upgrade Notice ##
-### 1.1.0 ###
-Now Texteller supports WooCommerce 6.5!
-New gateway: Spryng
-IMPORTANT: If you have PHP version below 7.4, you can download plugin version 0.1.3 from bit.ly/3yJQRUv which supports PHP 7.1 and above
+### 1.1.1 ###
+If you have PHP version below 7.4, you can download plugin version 0.1.3 from bit.ly/3yJQRUv which supports PHP 7.1 and above
