@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02b54fb30ac96151b0d24304ecda3734",
+    "content-hash": "dbf4014e090be1a6f88595f63b75942a",
     "packages": [
         {
             "name": "giggsey/libphonenumber-for-php",
@@ -132,6 +132,59 @@
                 "source": "https://github.com/giggsey/Locale/tree/2.2"
             },
             "time": "2022-04-06T07:33:59+00:00"
+        },
+        {
+            "name": "spryng/rest-api-php",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Spryng/rest-api-php.git",
+                "reference": "49e79b0ebd405fce7076d8512dafe8426f2fe43e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Spryng/rest-api-php/zipball/49e79b0ebd405fce7076d8512dafe8426f2fe43e",
+                "reference": "49e79b0ebd405fce7076d8512dafe8426f2fe43e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spryng\\SpryngRestApi\\": "src/Spryng/SpryngRestApi"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Roemer Bakker",
+                    "email": "contact@roemerbaker.com"
+                }
+            ],
+            "description": "Implementation of the REST API in PHP",
+            "keywords": [
+                "api",
+                "gateway",
+                "php",
+                "rest",
+                "sms",
+                "spryng",
+                "text"
+            ],
+            "support": {
+                "issues": "https://github.com/Spryng/rest-api-php/issues",
+                "source": "https://github.com/Spryng/rest-api-php/tree/v1.1.0"
+            },
+            "time": "2020-05-23T13:32:27+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",

@@ -80,7 +80,10 @@ class Gateway_Manager
 			$response = $gateway_instance->send( $content, $recipient_number, $interface, $action_gateway_data );
 			if( ! is_null( $message ) ) {
 				$message->set_status( $response ? 'sent' : 'failed' );
-				$message->set_gateway_data(is_array( $response ) ? $response : [] );
+				$message->set_gateway_data(isset($response['data']) && is_array( $response['data'] ) ? $response['data'] : [] );
+				if (isset($response['message_interface_number'])) {
+					$message->set_interface_number($response['message_interface_number']);
+				}
 				$message->save();
 			}
 			return (bool) $response;
