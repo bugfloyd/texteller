@@ -364,10 +364,11 @@ final class Options implements TLR\Interfaces\Options
 	private function register_active_gateways_options()
 	{
 	    $available_gateways = [
-            'twilio'        =>  'Twilio',
-            'melipayamak'   =>  'Melipayamak',
-		    'spryng'        =>  'Spryng'
-        ];
+		    'gatewayapi'    =>  'GatewayAPI',
+		    'melipayamak'   =>  'Melipayamak',
+		    'spryng'        =>  'Spryng',
+		    'twilio'        =>  'Twilio'
+	    ];
 
         /**
          * Filter available gateways list
