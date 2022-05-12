@@ -79,11 +79,19 @@ class Message_List_Table extends Object_List_Table_Abstract
 	private function set_gateways()
     {
 	    $gateways = [
+		    'gatewayapi'    =>  __( 'GatewayAPI', 'texteller' ),
 		    'melipayamak'   =>  __( 'Melipayamak', 'texteller' ),
-		    'twilio'        =>  __( 'Twilio', 'texteller' ),
 		    'spryng'        =>  __( 'Spryng', 'texteller' ),
+		    'twilio'        =>  __( 'Twilio', 'texteller' ),
 	    ];
-	    // todo
+
+	    /**
+	     * Filter available gateways list
+	     *
+	     * @param array $available_gateways
+	     * @since 0.1.3
+	     */
+	    $gateways = apply_filters( 'tlr_available_gateways', $gateways );
 
 	    $interfaces = [];
 	    foreach ($gateways as $gateway_slug => $gateway_title ) {

@@ -59,8 +59,7 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Automatic username generation with 4 different patterns: 1) WooCommerce default 2) International mobile number 3) National mobile number with or without the leading zero 4) Random numbers  
 *   Control sending new customer email  
 *   Control sending forget-password email  
-*   Generate mobile-friendly passwords  
-*   Update name fields on user profile for new customers registered via My-Account page  
+*   Update name fields on user profile for new customers registered via My-Account page
 *   For logged in customers with an already linked member, update member name fields in the checkout process  
 *   Allow logged in customers with no linked members, to register via Checkout page  
 *   Allow customers to verify their mobile number on My-Account page  
@@ -116,10 +115,11 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Advanced member importer tool to automatically register existing site users as a linked member
 
 # SUPPORTED GATEWAYS #
-*   [Spryng](https://www.spryng.nl/)
-*   [Twilio](https://www.twilio.com/)
-*   [Melipayamak](https://www.melipayamak.com/) (Dedicated and shared line)
-*   There’s more to come soon!  
+*   [GatewayAPI](https://gatewayapi.com)
+*   [Melipayamak](https://www.melipayamak.com) (Dedicated and shared line)
+*   [Spryng](https://www.spryng.nl)
+*   [Twilio](https://www.twilio.com)
+*   There’s more to come soon!
 
 # REQUIREMENTS #  
 Texteller needs PHP version 7.4 or above to give you the lite and smooth experience with the least effect on your website’s performance.
@@ -162,6 +162,9 @@ Of course! More plugin integration will be available in future updates. Some not
 
 == Changelog ==
 
+= 1.2.0 =
+* New: New gateway! gatewayapi.com full support: Send SMS, choose sender, get delivery reports, receive SMS
+
 = 1.1.1 =
 * Fix: Minor formatting issue in upgrade notices
 
@@ -189,9 +192,6 @@ Of course! More plugin integration will be available in future updates. Some not
 * Fix: PHP warning while formatting datetime
 * Fix: PHP notices while sending notifications when a gateway does not have extra data
 
-= 0.1.0 =
-Initial release
-
 ## Upgrade Notice ##
-### 1.1.1 ###
+### 1.2.0 ###
 If you have PHP version below 7.4, you can download plugin version 0.1.3 from bit.ly/3yJQRUv which supports PHP 7.1 and above
