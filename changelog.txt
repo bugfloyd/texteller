@@ -1,3 +1,6 @@
+= 1.2.0 =
+* New: New gateway! gatewayapi.com full support: Send SMS, choose sender, get delivery reports, receive SMS
+
 = 1.1.1 =
 * Fix: Minor formatting issue in upgrade notices
 

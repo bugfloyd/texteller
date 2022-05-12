@@ -51,7 +51,6 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Automatic username generation with 4 different patterns: 1) WooCommerce default 2) International mobile number 3) National mobile number with or without the leading zero 4) Random numbers  
 *   Control sending new customer email  
 *   Control sending forget-password email  
-*   Generate mobile-friendly passwords  
 *   Update name fields on user profile for new customers registered via My-Account page  
 *   For logged in customers with an already linked member, update member name fields in the checkout process  
 *   Allow logged in customers with no linked members, to register via Checkout page  
@@ -108,10 +107,11 @@ The plugin has a complete text message newsletter system with a detailed registr
 *   Advanced member importer tool to automatically register existing site users as a linked member
 
 ### SUPPORTED GATEWAYS 
-*   [Spryng](https://www.spryng.nl/)
-*   [Twilio](https://www.twilio.com/)
-*   [Melipayamak](https://www.melipayamak.com/) (Dedicated and shared line)
-*   There’s more to come soon!  
+* [GatewayAPI](https://gatewayapi.com)
+* [Melipayamak](https://www.melipayamak.com/) (Dedicated and shared line)
+* [Spryng](https://www.spryng.nl/)
+* [Twilio](https://www.twilio.com/)
+* There’s more to come soon!  
 
 ### REQUIREMENTS
 Texteller needs PHP version 7.4 or above to give you the lite and smooth experience with the least effect on your website’s performance.  
