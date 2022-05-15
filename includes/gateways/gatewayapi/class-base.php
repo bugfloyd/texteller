@@ -3,19 +3,9 @@
 namespace Texteller\Gateways\GatewayAPI;
 
 use Texteller as TLR;
-use nickdnk\GatewayAPI\Exceptions\BaseException;
-use nickdnk\GatewayAPI\Exceptions\ConnectionException;
-use nickdnk\GatewayAPI\Exceptions\GatewayRequestException;
-use nickdnk\GatewayAPI\Exceptions\GatewayServerException;
-use nickdnk\GatewayAPI\Exceptions\InsufficientFundsException;
-use nickdnk\GatewayAPI\Exceptions\MessageException;
-use nickdnk\GatewayAPI\Exceptions\SuccessfulResponseParsingException;
-use nickdnk\GatewayAPI\Exceptions\UnauthorizedException;
+use Exception;
 use WP_Error;
 use WP_REST_Request;
-use nickdnk\GatewayAPI\GatewayAPIHandler;
-use nickdnk\GatewayAPI\Entities\Request\Recipient;
-use nickdnk\GatewayAPI\Entities\Request\SMSMessage;
 
 defined("ABSPATH") || exit();
 
@@ -26,71 +16,55 @@ class Base implements TLR\Interfaces\Gateway
     use TLR\Traits\Encrypted_Options;
 
     /**
-     * @var null|GatewayAPIHandler $client GatewayAPI Client
+     * @var null|GatewayAPI $client GatewayAPI Client
      */
-    private static ?GatewayAPIHandler $client = null;
-
-    /**
-     * @var null|string $balance
-     */
-    private static ?string $balance = null;
+    private static ?GatewayAPI $client = null;
 
     public function __construct()
     {
     }
 
-    public static function get_client(): ?GatewayAPIHandler
+    public static function get_client(): ?GatewayAPI
     {
         if (self::$client && is_object(self::$client)) {
             return self::$client;
         }
 
-        $key = get_option("tlr_gateway_gatewayapi_key", "");
-        $secret = self::get_encrypted_option("tlr_gateway_gatewayapi_secret");
-
-        if (!$secret || !$key) {
-            return null;
-        }
-
-        self::$client = new GatewayAPIHandler($key, $secret);
-        return self::$client;
-    }
-
-    public static function get_balance(): string
-    {
-        if (self::$balance) {
-            return self::$balance;
-        }
-
-        if (!self::get_client()) {
-            return "";
-        }
-
         try {
-            self::$balance = self::get_client()
-                ->getCreditStatus()
-                ->getCredit();
-        } catch (ConnectionException | GatewayServerException | InsufficientFundsException | MessageException | SuccessfulResponseParsingException | UnauthorizedException | GatewayRequestException $e) {
+            self::$client = new GatewayAPI();
+        } catch (Exception $e) {
             TLR\tlr_write_log(
-                "GatewayAPI: An error occurred while getting account credit." .
+                "GatewayAPI: AFailed to initialize GatewayAPI client. " .
                     $e->getMessage()
             );
-            self::$balance = "";
+            return null;
         }
-
-        return (string) self::$balance;
+        return self::$client;
     }
 
     public static function get_account_details()
     {
-        $balance = self::get_balance();
-        if (($balance === null) | ($balance === "")) {
-            return false;
+        if (!self::get_client()) {
+            return "";
         }
 
-        return [
-            "balance" => $balance,
-        ];
+        $account_details = [];
+
+        $res = self::$client->get_account_details();
+
+        if (!is_wp_error($res) && !empty($res)) {
+            $account_details["account_id"] = $res->id;
+            $account_details["balance"] = $res->credit;
+            $account_details["currency"] = $res->currency;
+        } else {
+            TLR\tlr_write_log(
+                "GatewayAPI: An error occurred while getting account balance " .
+                    $res->get_error_code() .
+                    $res->get_error_message()
+            );
+        }
+
+        return $account_details;
     }
 
     public function send(
@@ -116,61 +90,22 @@ class Base implements TLR\Interfaces\Gateway
             return false;
         }
 
-        $sender_name = self::get_sender_name();
+        $result = self::$client->send_sms($number, $text);
 
-        $message = new SMSMessage($text, $sender_name);
-
-        $message->addRecipient(new Recipient($number));
-
-        try {
-            $result = self::$client->deliverMessages([$message]);
-
-            // All message IDs returned.
-            $message_id = $result->getMessageIds();
-
-            return $message_id
+        if (!is_wp_error($result)) {
+            return !empty($result)
                 ? [
-                    "data" => ["id" => $message_id[0]],
-                    "message_interface_number" => $sender_name,
+                    "data" => ["id" => (string) $result],
+                    "message_interface_number" => self::$client::get_sender_name(),
                 ]
                 : false;
-        } catch (InsufficientFundsException $e) {
-            TLR\tlr_write_log(
-                "GatewayAPI: our account has insufficient funds."
-            );
-        } catch (MessageException | SuccessfulResponseParsingException $e) {
+        } else {
             TLR\tlr_write_log(
                 "GatewayAPI: An error occurred while sending the message. " .
-                    $e->getGatewayAPIErrorCode() .
-                    " | " .
-                    $e->getMessage()
-            );
-        } catch (UnauthorizedException $e) {
-            TLR\tlr_write_log(
-                "GatewayAPI: Something is wrong with your credentials or your IP. " .
-                    $e->getGatewayAPIErrorCode() .
-                    " | " .
-                    $e->getMessage()
-            );
-        } catch (GatewayServerException $e) {
-            TLR\tlr_write_log(
-                "GatewayAPI: Something is wrong with GatewayAPI servers. " .
-                    $e->getGatewayAPIErrorCode() .
-                    " | " .
-                    $e->getMessage()
-            );
-        } catch (ConnectionException $e) {
-            TLR\tlr_write_log(
-                "GatewayAPI: Connection to GatewayAPI failed or timed out. " .
-                    $e->getMessage()
-            );
-        } catch (BaseException $e) {
-            TLR\tlr_write_log(
-                "GatewayAPI: An error occurred while sending the message. " .
-                    $e->getMessage()
+                    $result->get_error_code() .
+                    $result->get_error_message()
             );
         }
-
         return false;
     }
 
@@ -225,54 +160,51 @@ class Base implements TLR\Interfaces\Gateway
         }
     }
 
-	/**
-	 * @param WP_REST_Request $request Current request.
-	 *
-	 * @return string|WP_Error
-	 */
-	public static function rest_receive_callback(WP_REST_Request $request)
-	{
-		TLR\tlr_write_log(
-			$request
-		);
-		$method = $request->get_method();
-		$message_body = $request->get_params();
+    /**
+     * @param WP_REST_Request $request Current request.
+     *
+     * @return string|WP_Error
+     */
+    public static function rest_receive_callback(WP_REST_Request $request)
+    {
+        $method = $request->get_method();
+        $message_body = $request->get_params();
 
-		$message_id = isset($message_body["id"])
-			? sanitize_text_field($message_body["id"])
-			: "";
-		$text = isset($message_body["message"])
-			? sanitize_text_field($message_body["message"])
-			: "";
-		$receiver = isset($message_body["receiver"])
-			? sanitize_text_field($message_body["receiver"])
-			: "";
-		$msisdn = isset($message_body["msisdn"])
-			? sanitize_text_field($message_body["msisdn"])
-			: "";
-		$member_id = TLR\tlr_get_member_id($msisdn);
+        $message_id = isset($message_body["id"])
+            ? sanitize_text_field($message_body["id"])
+            : "";
+        $text = isset($message_body["message"])
+            ? sanitize_text_field($message_body["message"])
+            : "";
+        $receiver = isset($message_body["receiver"])
+            ? sanitize_text_field($message_body["receiver"])
+            : "";
+        $msisdn = isset($message_body["msisdn"])
+            ? sanitize_text_field($message_body["msisdn"])
+            : "";
+        $member_id = TLR\tlr_get_member_id($msisdn);
 
-		if ("POST" !== $method || !$msisdn || !$receiver || !$message_id) {
-			return new WP_Error(
-				"rest_invalid_message_data",
-				esc_html("Invalid message data"),
-				["status" => 404]
-			);
-		} else {
-			$message = new TLR\Message();
-			$message->set_recipient($msisdn);
-			$message->set_gateway("gatewayapi");
-			$message->set_interface("gatewayapi-sms");
-			$message->set_interface_number($receiver);
-			$message->set_gateway_data(["id" => $message_id]);
-			$message->set_content($text);
-			$message->set_status("received");
-			$message->set_trigger("tlr_inbound_message");
-			$message->set_member_id($member_id);
-			$message->save();
-			return "success";
-		}
-	}
+        if ("POST" !== $method || !$msisdn || !$receiver || !$message_id) {
+            return new WP_Error(
+                "rest_invalid_message_data",
+                esc_html("Invalid message data"),
+                ["status" => 404]
+            );
+        } else {
+            $message = new TLR\Message();
+            $message->set_recipient($msisdn);
+            $message->set_gateway("gatewayapi");
+            $message->set_interface("gatewayapi-sms");
+            $message->set_interface_number($receiver);
+            $message->set_gateway_data(["id" => $message_id]);
+            $message->set_content($text);
+            $message->set_status("received");
+            $message->set_trigger("tlr_inbound_message");
+            $message->set_member_id($member_id);
+            $message->save();
+            return "success";
+        }
+    }
 
     public static function get_interfaces(): array
     {
@@ -288,7 +220,7 @@ class Base implements TLR\Interfaces\Gateway
 
     public static function get_interface_number(string $interface): string
     {
-        return self::get_sender_name();
+        return self::get_client()::get_sender_name();
     }
 
     public static function get_content_types(): array
@@ -301,15 +233,6 @@ class Base implements TLR\Interfaces\Gateway
     public static function is_interface_active(string $interface): bool
     {
         return true;
-    }
-
-    private static function get_sender_name(): string
-    {
-        $originator = get_option(
-            "tlr_gateway_gatewayapi_sender_name",
-            "Texteller"
-        );
-        return empty($originator) ? "Texteller" : $originator;
     }
 
     ///////////////////////////////////////////////////
@@ -424,10 +347,18 @@ class Base implements TLR\Interfaces\Gateway
 } ?></span>
             </div><?php if ($account_details) { ?>
                 <div class="gateway-info-label-wrap">
+                    <span><?= esc_html__("Account ID", "texteller") ?></span>
+                </div>
+                <div class="gateway-info-value-wrap">
+                    <span><?= esc_html($account_details["account_id"]) ?></span>
+                </div>
+                <div class="gateway-info-label-wrap">
                     <span><?= esc_html__("Balance", "texteller") ?></span>
                 </div>
                 <div class="gateway-info-value-wrap">
-                    <span><?= esc_html($account_details["balance"]) ?></span>
+                    <span><?= esc_html($account_details["balance"]) .
+                        " " .
+                        esc_html($account_details["currency"]) ?></span>
                 </div>
                 <div class="gateway-info-label-wrap">
                     <span><?= esc_html__(
@@ -442,14 +373,14 @@ class Base implements TLR\Interfaces\Gateway
                 </div>
                 <div class="gateway-info-label-wrap">
                     <span><?= esc_html__(
-		                    "Receive Endpoint",
-		                    "texteller"
-	                    ) ?></span>
+                        "Receive Endpoint",
+                        "texteller"
+                    ) ?></span>
                 </div>
                 <div class="gateway-info-value-wrap">
                 <span><?= esc_html(
-				        get_rest_url(null, "texteller/v1/receive/gatewayapi")
-			        ) ?></span>
+                    get_rest_url(null, "texteller/v1/receive/gatewayapi")
+                ) ?></span>
                 </div><?php } ?>
         </div>
         </div>
