@@ -95,7 +95,7 @@ class Base implements TLR\Interfaces\Gateway
         if (!is_wp_error($result)) {
             return !empty($result)
                 ? [
-                    "data" => ["id" => $result[0]],
+                    "data" => ["id" => (string) $result],
                     "message_interface_number" => self::$client::get_sender_name(),
                 ]
                 : false;

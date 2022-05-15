@@ -121,10 +121,7 @@ class GatewayAPI
             $res = wp_remote_request($uri, [
                 "method" => "POST",
                 "headers" => [
-                    "Authorization" => $this->get_auth_header(
-                        $uri,
-                        $ts
-                    ),
+                    "Authorization" => $this->get_auth_header($uri, $ts),
                     "Content-Type" => "application/json",
                     "user-agent" => "wp-gatewayapi",
                 ],
