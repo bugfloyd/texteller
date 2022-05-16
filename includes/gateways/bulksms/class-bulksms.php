@@ -14,7 +14,7 @@ class BulkSMS
 
     private string $token_secret = "";
 
-	private string $base_url = "https://api.bulksms.com/v1";
+    private string $base_url = "https://api.bulksms.com/v1";
 
     /**
      * @throws Exception
@@ -37,7 +37,9 @@ class BulkSMS
 
     private function set_token_secret(): void
     {
-        $secret = self::get_encrypted_option("tlr_gateway_bulksms_token_secret");
+        $secret = self::get_encrypted_option(
+            "tlr_gateway_bulksms_token_secret"
+        );
         $this->token_secret = $secret;
     }
 
@@ -51,43 +53,46 @@ class BulkSMS
         return $this->token_secret;
     }
 
-    private function get_auth_token(): string {
+    private function get_auth_token(): string
+    {
         $token_id = $this->get_token_id();
         $token_secret = $this->get_token_secret();
 
         // OAuth 1.0a - Sign SBS with secret
-	    return base64_encode($token_id . ":" . $token_secret);
+        return base64_encode($token_id . ":" . $token_secret);
     }
 
     public function send_sms(string $number, string $text)
     {
-	    $uri = "$this->base_url/messages?auto-unicode=true";
+        $uri = "$this->base_url/messages?auto-unicode=true";
 
         // build the request
         $request = [
             [
-				"from"  =>  self::get_sender_object(),
-	            "to"    =>  [
-		            'type' => 'INTERNATIONAL',
-		            "address"   =>  $number
-	            ],
-	            "routingGroup"  => self::get_routing_group(),
-	            "body"  =>  $text
-            ]
+                "from" => self::get_sender_object(),
+                "to" => [
+                    "type" => "INTERNATIONAL",
+                    "address" => $number,
+                ],
+                "routingGroup" => self::get_routing_group(),
+                "body" => $text,
+            ],
         ];
-
 
         $res = wp_remote_request($uri, [
             "method" => "POST",
             "headers" => [
                 "Authorization" => "Basic {$this->get_auth_token()}",
-                "Content-Type" => "application/json"
+                "Content-Type" => "application/json",
             ],
             "body" => json_encode($request),
         ]);
 
         if (!is_wp_error($res)) {
-            if ($res["response"]["code"] == 200 || $res["response"]["code"] == 201) {
+            if (
+                $res["response"]["code"] == 200 ||
+                $res["response"]["code"] == 201
+            ) {
                 return json_decode($res["body"]);
             }
             $error_raw = $res["body"];
@@ -104,14 +109,11 @@ class BulkSMS
             );
         }
 
-        if (
-            is_wp_error($res) &&
-            !isset($res->errors["http_request_failed"])
-        ) {
-	        return new WP_Error(
-		        "TLR_BULKSMS_TECH_FAILED",
-		        json_encode($res["body"])
-	        );
+        if (is_wp_error($res) && !isset($res->errors["http_request_failed"])) {
+            return new WP_Error(
+                "TLR_BULKSMS_TECH_FAILED",
+                json_encode($res["body"])
+            );
         }
 
         return new WP_Error(
@@ -128,7 +130,7 @@ class BulkSMS
             "method" => "GET",
             "headers" => [
                 "Authorization" => "Basic {$this->get_auth_token()}",
-                "Content-Type" => "application/json"
+                "Content-Type" => "application/json",
             ],
         ]);
 
@@ -151,20 +153,17 @@ class BulkSMS
             );
         }
 
-	    if (
-		    is_wp_error($res) &&
-		    !isset($res->errors["http_request_failed"])
-	    ) {
-		    return new WP_Error(
-			    "TLR_BULKSMS_TECH_FAILED",
-			    json_encode($res["body"])
-		    );
-	    }
+        if (is_wp_error($res) && !isset($res->errors["http_request_failed"])) {
+            return new WP_Error(
+                "TLR_BULKSMS_TECH_FAILED",
+                json_encode($res["body"])
+            );
+        }
 
-	    return new WP_Error(
-		    "TLR_BULKSMS_FAILED",
-		    "Failed to get BulkSMS profile."
-	    );
+        return new WP_Error(
+            "TLR_BULKSMS_FAILED",
+            "Failed to get BulkSMS profile."
+        );
     }
 
     public static function get_sender_object(): array
@@ -173,37 +172,37 @@ class BulkSMS
             "tlr_gateway_bulksms_sender_type",
             "REPLIABLE"
         );
-	    $sender_address = '';
+        $sender_address = "";
 
-		if ($sender_type === 'INTERNATIONAL') {
-			$sender_address = get_option(
-				"tlr_gateway_bulksms_sender_international_address",
-				""
-			);
-		}
+        if ($sender_type === "INTERNATIONAL") {
+            $sender_address = get_option(
+                "tlr_gateway_bulksms_sender_international_address",
+                ""
+            );
+        }
 
-	    if ($sender_type === 'ALPHANUMERIC') {
-		    $sender_address = get_option(
-			    "tlr_gateway_bulksms_sender_alphanumeric_address",
-			    "Texteller"
-		    );
-	    }
+        if ($sender_type === "ALPHANUMERIC") {
+            $sender_address = get_option(
+                "tlr_gateway_bulksms_sender_alphanumeric_address",
+                "Texteller"
+            );
+        }
 
-        return ['type' => $sender_type, 'address' => $sender_address];
+        return ["type" => $sender_type, "address" => $sender_address];
     }
 
-	public static function get_sender_name(): string
-	{
-		$sender = self::get_sender_object();
-		if ($sender['type'] === 'REPLIABLE') {
-			return 'repliable';
-		} else {
-			return $sender['address'];
-		}
-	}
+    public static function get_sender_name(): string
+    {
+        $sender = self::get_sender_object();
+        if ($sender["type"] === "REPLIABLE") {
+            return "repliable";
+        } else {
+            return $sender["address"];
+        }
+    }
 
-	public static function get_routing_group(): string
-	{
-		return get_option('tlr_gateway_bulksms_routing_group', "STANDARD");
-	}
+    public static function get_routing_group(): string
+    {
+        return get_option("tlr_gateway_bulksms_routing_group", "STANDARD");
+    }
 }

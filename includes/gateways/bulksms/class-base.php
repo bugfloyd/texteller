@@ -96,11 +96,11 @@ class Base implements TLR\Interfaces\Gateway
 
         $result = self::$client->send_sms($number, $text);
 
-        if (!is_wp_error($result) && isset($result[0]["id"])) {
+        if (!is_wp_error($result)) {
             return !empty($result)
                 ? [
-                    "data" => ["id" => $result[0]["id"]],
-                    "message_interface_number" => $result[0]["from"],
+                    "data" => ["id" => $result[0]->id],
+                    "message_interface_number" => $result[0]->from,
                 ]
                 : false;
         } else {
@@ -113,128 +113,102 @@ class Base implements TLR\Interfaces\Gateway
         return false;
     }
 
-        /**
-         * @param WP_REST_Request $request Current request.
-         *
-         * @return string|WP_Error
-         */
-        public static function rest_delivery_callback(WP_REST_Request $request)
-        {
-            $method = $request->get_method();
-            $delivery_body = $request->get_body_params();
-	        $delivery_body1 = $delivery_body[0] ?? [];
-	        $delivery_body2 = $delivery_body[1] ?? [];
+    /**
+     * @param WP_REST_Request $request Current request.
+     *
+     * @return string|WP_Error
+     */
+    public static function rest_delivery_callback(WP_REST_Request $request)
+    {
+        $method = $request->get_method();
+        $delivery_body = $request->get_params();
+        $delivery_body = $delivery_body[0] ?? [];
 
-	        TLR\tlr_write_log(
-		        $delivery_body
-	        );
+        TLR\tlr_write_log($delivery_body);
 
-            if ("POST" === $method && (!empty($delivery_body1["id"]) || !empty($delivery_body2["id"]))) {
-                if (!empty($delivery_body1["id"]) ) {
-	                $args = [
-		                "object_type" => "message",
-		                "statuses" => ["sent", "delivered", "failed", "pending"],
-		                "gateways" => ["bulksms"],
-		                "field" => "ID",
-		                "gateway_data" => sanitize_text_field($delivery_body1["id"]),
-	                ];
-	                $message_query = new TLR\Object_Query($args);
-	                $message_id = $message_query->get_messages(1);
-	                if (!empty($message_id)) {
-		                $message = new TLR\Message($message_id[0]);
-		                if ($message->get_id()) {
-			                if ($delivery_body1["status"]['type'] == "DELIVERED") {
-				                $status = "delivered";
-			                } elseif (
-				                $delivery_body1["status"]['type'] == "ACCEPTED"
-			                ) {
-				                $status = "pending";
-			                } else {
-				                $status = "failed";
-			                }
-			                $message->set_status($status);
-			                $message->save();
-		                }
-	                }
+        if ("POST" === $method && !empty($delivery_body["id"])) {
+            $args = [
+                "object_type" => "message",
+                "statuses" => ["sent", "delivered", "failed", "pending"],
+                "gateways" => ["bulksms"],
+                "field" => "ID",
+                "gateway_data" => sanitize_text_field($delivery_body["id"]),
+            ];
+            $message_query = new TLR\Object_Query($args);
+            $message_id = $message_query->get_messages(1);
+            if (!empty($message_id)) {
+                $message = new TLR\Message($message_id[0]);
+                if ($message->get_id()) {
+                    if ($delivery_body["status"]["type"] == "DELIVERED") {
+                        $status = "delivered";
+                    } elseif ($delivery_body["status"]["type"] == "ACCEPTED") {
+                        $status = "sent";
+                    } else {
+                        $status = "failed";
+                    }
+                    $message->set_status($status);
+                    $message->save();
                 }
-
-	            if (!empty($delivery_body2["id"]) ) {
-		            $args = [
-			            "object_type" => "message",
-			            "statuses" => ["sent", "delivered", "failed", "pending"],
-			            "gateways" => ["bulksms"],
-			            "field" => "ID",
-			            "gateway_data" => sanitize_text_field($delivery_body2["id"]),
-		            ];
-		            $message_query = new TLR\Object_Query($args);
-		            $message_id = $message_query->get_messages(1);
-		            if (!empty($message_id)) {
-			            $message = new TLR\Message($message_id[0]);
-			            if ($message->get_id()) {
-				            if ($delivery_body2["status"]['type'] == "DELIVERED") {
-					            $status = "delivered";
-				            } elseif (
-					            $delivery_body2["status"]['type'] == "ACCEPTED"
-				            ) {
-					            $status = "pending";
-				            } else {
-					            $status = "failed";
-				            }
-				            $message->set_status($status);
-				            $message->save();
-			            }
-		            }
-	            }
             }
-
-	        return "success";
         }
 
-    //    /**
-    //     * @param WP_REST_Request $request Current request.
-    //     *
-    //     * @return string|WP_Error
-    //     */
-    //    public static function rest_receive_callback(WP_REST_Request $request)
-    //    {
-    //        $method = $request->get_method();
-    //        $message_body = $request->get_params();
-    //
-    //        $message_id = isset($message_body["id"])
-    //            ? sanitize_text_field($message_body["id"])
-    //            : "";
-    //        $text = isset($message_body["message"])
-    //            ? sanitize_text_field($message_body["message"])
-    //            : "";
-    //        $receiver = isset($message_body["receiver"])
-    //            ? sanitize_text_field($message_body["receiver"])
-    //            : "";
-    //        $msisdn = isset($message_body["msisdn"])
-    //            ? sanitize_text_field($message_body["msisdn"])
-    //            : "";
-    //        $member_id = TLR\tlr_get_member_id($msisdn);
-    //
-    //        if ("POST" !== $method || !$msisdn || !$receiver || !$message_id) {
-    //            return new WP_Error(
-    //                "rest_invalid_message_data",
-    //                esc_html("Invalid message data"),
-    //                ["status" => 404]
-    //            );
-    //        } else {
-    //            $message = new TLR\Message();
-    //            $message->set_recipient($msisdn);
-    //            $message->set_gateway("gatewayapi");
-    //            $message->set_interface("gatewayapi-sms");
-    //            $message->set_interface_number($receiver);
-    //            $message->set_gateway_data(["id" => $message_id]);
-    //            $message->set_content($text);
-    //            $message->set_status("received");
-    //            $message->set_trigger("tlr_inbound_message");
-    //            $message->set_member_id($member_id);
-    //            $message->save();
-    //            return "success";
-    //        }
-    //    }
+        return "success";
+    }
+
+    /**
+     * @param WP_REST_Request $request Current request.
+     *
+     * @return string|WP_Error
+     */
+    public static function rest_receive_callback(WP_REST_Request $request)
+    {
+        $method = $request->get_method();
+        $message_body = $request->get_params();
+
+        TLR\tlr_write_log($message_body);
+
+        $message_body = $message_body[0] ?? [];
+
+        if (
+            isset($message_body["type"]) &&
+            "RECEIVED" === $message_body["type"]
+        ) {
+            $message_id = isset($message_body["id"])
+                ? sanitize_text_field($message_body["id"])
+                : "";
+            $body = isset($message_body["body"])
+                ? sanitize_text_field($message_body["body"])
+                : "";
+            $to = isset($message_body["to"])
+                ? sanitize_text_field($message_body["to"])
+                : "";
+            $from = isset($message_body["from"])
+                ? sanitize_text_field($message_body["from"])
+                : "";
+            $member_id = TLR\tlr_get_member_id($from);
+
+            if ("POST" !== $method || !$from || !$to || !$message_id) {
+                return new WP_Error(
+                    "rest_invalid_message_data",
+                    esc_html("Invalid message data"),
+                    ["status" => 404]
+                );
+            } else {
+                $message = new TLR\Message();
+                $message->set_recipient($from);
+                $message->set_gateway("bulksms");
+                $message->set_interface("bulksms-sms");
+                $message->set_interface_number($to);
+                $message->set_gateway_data(["id" => $message_id]);
+                $message->set_content($body);
+                $message->set_status("received");
+                $message->set_trigger("tlr_inbound_message");
+                $message->set_member_id($member_id);
+                $message->save();
+                return "success";
+            }
+        }
+    }
 
     public static function get_interfaces(): array
     {
@@ -543,7 +517,7 @@ class Base implements TLR\Interfaces\Gateway
                 </div>
                 <div class="gateway-info-label-wrap">
                     <span><?= esc_html__(
-                        "Delivery Endpoint",
+                        "Delivery webhook",
                         "texteller"
                     ) ?></span>
                 </div>
@@ -554,13 +528,23 @@ class Base implements TLR\Interfaces\Gateway
                 </div>
                 <div class="gateway-info-label-wrap">
                     <span><?= esc_html__(
-                        "Receive Endpoint",
+                        "Receive webhook",
                         "texteller"
                     ) ?></span>
                 </div>
                 <div class="gateway-info-value-wrap">
                 <span><?= esc_html(
                     get_rest_url(null, "texteller/v1/receive/bulksms")
+                ) ?></span>
+                </div>
+                <div class="gateway-info-label-wrap">
+                <span><?= esc_html__("Note:", "texteller") ?></span>
+                </div>
+                <div class="gateway-info-value-wrap">
+                <span><?= esc_html_x(
+                    "While setting webhooks on bulksms.com, you should choose 'only one message' for the 'Invoke with' option.",
+                    "BulkSMS gateway details",
+                    "texteller"
                 ) ?></span>
                 </div><?php } ?>
         </div>
