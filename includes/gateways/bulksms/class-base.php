@@ -546,6 +546,16 @@ class Base implements TLR\Interfaces\Gateway
                     "BulkSMS gateway details",
                     "texteller"
                 ) ?></span>
+                </div>
+                <div class="gateway-info-label-wrap">
+                    <span><?= esc_html__("Note:", "texteller") ?></span>
+                </div>
+                <div class="gateway-info-value-wrap">
+                <span><?= esc_html_x(
+				        "Due to the way BulkSMS API works, it is possible to get delivery status for a message sent via 'Economy' route as 'Delivered' while the actual message is not delivered yet. ",
+				        "BulkSMS gateway details",
+				        "texteller"
+			        ) ?></span>
                 </div><?php } ?>
         </div>
         </div>
