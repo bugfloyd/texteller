@@ -298,6 +298,12 @@ class Option_Renderer {
                         }
 	                ?></select><?php
                 }
+                if ( isset($input_args['input'], $input_args['input']['id']) ) {
+                    ?><label for='<?= esc_attr($input_args['input']['id']) ?>'> | <?=
+                    esc_html($input_args['input']['title'])?>: </label>
+                    <input type="text" id="<?= esc_attr($input_args['input']['id']) ?>" name="<?= esc_attr($input_args['input']['id']) ?>" value="<?= esc_attr(get_option($input_args['input']['id'])) ?>" />
+                <?php
+                }
                 // Render description
                 if ( isset($input_args['desc']) ) {
                     ?><p style='padding: 0 10px 0 27px;font-size: 0.9em;'><?= $input_args['desc'] ?></p><?php

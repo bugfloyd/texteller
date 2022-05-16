@@ -364,6 +364,7 @@ final class Options implements TLR\Interfaces\Options
 	private function register_active_gateways_options()
 	{
 	    $available_gateways = [
+		    'bulksms'       =>  'BulkSMS',
 		    'gatewayapi'    =>  'GatewayAPI',
 		    'melipayamak'   =>  'Melipayamak',
 		    'spryng'        =>  'Spryng',
