@@ -179,6 +179,7 @@ class BulkSMS
                 "tlr_gateway_bulksms_sender_international_address",
                 ""
             );
+	        return ["type" => $sender_type, "address" => $sender_address];
         }
 
         if ($sender_type === "ALPHANUMERIC") {
@@ -186,9 +187,10 @@ class BulkSMS
                 "tlr_gateway_bulksms_sender_alphanumeric_address",
                 "Texteller"
             );
+	        return ["type" => $sender_type, "address" => $sender_address];
         }
 
-        return ["type" => $sender_type, "address" => $sender_address];
+        return ["type" => $sender_type];
     }
 
     public static function get_sender_name(): string

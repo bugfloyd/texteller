@@ -97,6 +97,8 @@ class Base implements TLR\Interfaces\Gateway
         $result = self::$client->send_sms($number, $text);
 
         if (!is_wp_error($result)) {
+            TLR\tlr_write_log($result);
+
             return !empty($result)
                 ? [
                     "data" => ["id" => $result[0]->id],
@@ -124,8 +126,6 @@ class Base implements TLR\Interfaces\Gateway
         $delivery_body = $request->get_params();
         $delivery_body = $delivery_body[0] ?? [];
 
-        TLR\tlr_write_log($delivery_body);
-
         if ("POST" === $method && !empty($delivery_body["id"])) {
             $args = [
                 "object_type" => "message",
@@ -146,6 +146,10 @@ class Base implements TLR\Interfaces\Gateway
                     } else {
                         $status = "failed";
                     }
+                    $to = $delivery_body["from"];
+                    if ($message->get_interface_number() != $to) {
+                        $message->set_interface_number($to);
+                    }
                     $message->set_status($status);
                     $message->save();
                 }
@@ -164,8 +168,6 @@ class Base implements TLR\Interfaces\Gateway
     {
         $method = $request->get_method();
         $message_body = $request->get_params();
-
-        TLR\tlr_write_log($message_body);
 
         $message_body = $message_body[0] ?? [];
 
@@ -205,9 +207,9 @@ class Base implements TLR\Interfaces\Gateway
                 $message->set_trigger("tlr_inbound_message");
                 $message->set_member_id($member_id);
                 $message->save();
-                return "success";
             }
         }
+	    return "success";
     }
 
     public static function get_interfaces(): array
