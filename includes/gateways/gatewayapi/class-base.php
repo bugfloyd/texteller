@@ -34,7 +34,7 @@ class Base implements TLR\Interfaces\Gateway
             self::$client = new GatewayAPI();
         } catch (Exception $e) {
             TLR\tlr_write_log(
-                "GatewayAPI: AFailed to initialize GatewayAPI client. " .
+                "GatewayAPI: Failed to initialize GatewayAPI client. " .
                     $e->getMessage()
             );
             return null;

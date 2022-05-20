@@ -79,6 +79,7 @@ class Message_List_Table extends Object_List_Table_Abstract
 	private function set_gateways()
     {
 	    $gateways = [
+		    'bulksms'       =>  __( 'BulkSMS', 'texteller' ),
 		    'gatewayapi'    =>  __( 'GatewayAPI', 'texteller' ),
 		    'melipayamak'   =>  __( 'Melipayamak', 'texteller' ),
 		    'spryng'        =>  __( 'Spryng', 'texteller' ),
