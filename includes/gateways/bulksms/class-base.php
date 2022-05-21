@@ -97,8 +97,6 @@ class Base implements TLR\Interfaces\Gateway
         $result = self::$client->send_sms($number, $text);
 
         if (!is_wp_error($result)) {
-            TLR\tlr_write_log($result);
-
             return !empty($result)
                 ? [
                     "data" => ["id" => $result[0]->id],
@@ -324,7 +322,7 @@ class Base implements TLR\Interfaces\Gateway
                 "title" => __("BulkSMS sender name", "texteller"),
                 "field_args" => ["default" => "REPLIABLE"],
                 "desc" => _x(
-                    "The sender name of the message for BulkSMS. Spaces are not allowed.",
+                    "The sender name of the message for BulkSMS. Spaces are not allowed. Please note that you should first add the sender IDs in bulksms.com",
                     "BulkSMS gateway",
                     "texteller"
                 ),
