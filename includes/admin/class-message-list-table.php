@@ -82,6 +82,7 @@ class Message_List_Table extends Object_List_Table_Abstract
 		    'bulksms'       =>  __( 'BulkSMS', 'texteller' ),
 		    'gatewayapi'    =>  __( 'GatewayAPI', 'texteller' ),
 		    'melipayamak'   =>  __( 'Melipayamak', 'texteller' ),
+		    'sabanovin'     =>  __( 'SabaNovin', 'texteller' ),
 		    'spryng'        =>  __( 'Spryng', 'texteller' ),
 		    'twilio'        =>  __( 'Twilio', 'texteller' ),
 	    ];
