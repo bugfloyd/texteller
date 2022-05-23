@@ -42,28 +42,25 @@ class SabaNovin
         return $this->base_url . "/" . $this->get_api_key();
     }
 
-	public static function get_gateway_number(): string
-	{
-		return get_option("tlr_gateway_sabanovin_gateway", '');
-	}
+    public static function get_gateway_number(): string
+    {
+        return get_option("tlr_gateway_sabanovin_gateway", "");
+    }
 
     public function send_sms(string $number, string $text)
     {
         $uri = "{$this->get_auth_url()}/sms/send.json";
-		$gateway_number = self::get_gateway_number();
+        $gateway_number = self::get_gateway_number();
 
-		if (empty($gateway_number)) {
-			return new WP_Error(
-				"TLR_SABANOVIN_FAILED",
-				"No gateway number"
-			);
-		}
+        if (empty($gateway_number)) {
+            return new WP_Error("TLR_SABANOVIN_FAILED", "No gateway number");
+        }
 
         // build the request
         $request = [
-	        "gateway" => $gateway_number,
-	        "to" => $number,
-	        "text" => $text
+            "gateway" => $gateway_number,
+            "to" => $number,
+            "text" => $text,
         ];
 
         $res = wp_remote_request($uri, [
@@ -79,10 +76,10 @@ class SabaNovin
                 $res["response"]["code"] == 200 ||
                 $res["response"]["code"] == 201
             ) {
-	            $body = json_decode($res["body"]);
-	            if ($body->status->code == 200) {
-		            return $body->entries[0];
-	            }
+                $body = json_decode($res["body"]);
+                if ($body->status->code == 200) {
+                    return $body->entries[0];
+                }
             }
             $error_raw = $res["body"];
             $error = json_decode($error_raw);

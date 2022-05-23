@@ -34,8 +34,7 @@ class Base implements TLR\Interfaces\Gateway
             self::$client = new SabaNovin();
         } catch (Exception $e) {
             TLR\tlr_write_log(
-                "SabaNovin: Failed to initialize client. " .
-                    $e->getMessage()
+                "SabaNovin: Failed to initialize client. " . $e->getMessage()
             );
             return null;
         }
@@ -92,7 +91,7 @@ class Base implements TLR\Interfaces\Gateway
         if (!is_wp_error($result)) {
             return !empty($result)
                 ? [
-                    "data" => ["reference_id" => $result->reference_id]
+                    "data" => ["reference_id" => $result->reference_id],
                 ]
                 : false;
         } else {
@@ -115,38 +114,37 @@ class Base implements TLR\Interfaces\Gateway
         $method = $request->get_method();
         $delivery_body = $request->get_body_params();
         TLR\tlr_write_log($delivery_body);
-	    TLR\tlr_write_log($method);
+        TLR\tlr_write_log($method);
 
-
-//        if ("POST" === $method && !empty($delivery_body["id"])) {
-//            $args = [
-//                "object_type" => "message",
-//                "statuses" => ["sent", "delivered", "failed", "pending"],
-//                "gateways" => ["bulksms"],
-//                "field" => "ID",
-//                "gateway_data" => sanitize_text_field($delivery_body["id"]),
-//            ];
-//            $message_query = new TLR\Object_Query($args);
-//            $message_id = $message_query->get_messages(1);
-//            if (!empty($message_id)) {
-//                $message = new TLR\Message($message_id[0]);
-//                if ($message->get_id()) {
-//                    if ($delivery_body["status"]["type"] == "DELIVERED") {
-//                        $status = "delivered";
-//                    } elseif ($delivery_body["status"]["type"] == "ACCEPTED") {
-//                        $status = "sent";
-//                    } else {
-//                        $status = "failed";
-//                    }
-//                    $to = $delivery_body["from"];
-//                    if ($message->get_interface_number() != $to) {
-//                        $message->set_interface_number($to);
-//                    }
-//                    $message->set_status($status);
-//                    $message->save();
-//                }
-//            }
-//        }
+        //        if ("POST" === $method && !empty($delivery_body["id"])) {
+        //            $args = [
+        //                "object_type" => "message",
+        //                "statuses" => ["sent", "delivered", "failed", "pending"],
+        //                "gateways" => ["bulksms"],
+        //                "field" => "ID",
+        //                "gateway_data" => sanitize_text_field($delivery_body["id"]),
+        //            ];
+        //            $message_query = new TLR\Object_Query($args);
+        //            $message_id = $message_query->get_messages(1);
+        //            if (!empty($message_id)) {
+        //                $message = new TLR\Message($message_id[0]);
+        //                if ($message->get_id()) {
+        //                    if ($delivery_body["status"]["type"] == "DELIVERED") {
+        //                        $status = "delivered";
+        //                    } elseif ($delivery_body["status"]["type"] == "ACCEPTED") {
+        //                        $status = "sent";
+        //                    } else {
+        //                        $status = "failed";
+        //                    }
+        //                    $to = $delivery_body["from"];
+        //                    if ($message->get_interface_number() != $to) {
+        //                        $message->set_interface_number($to);
+        //                    }
+        //                    $message->set_status($status);
+        //                    $message->save();
+        //                }
+        //            }
+        //        }
 
         return "success";
     }
@@ -158,54 +156,42 @@ class Base implements TLR\Interfaces\Gateway
      */
     public static function rest_receive_callback(WP_REST_Request $request)
     {
-        $method = $request->get_method();
-        $message_body = $request->get_body_params();
-	    TLR\tlr_write_log($method);
+        $message_body = $request->get_params();
 
-	    TLR\tlr_write_log($message_body);
+        if (isset($message_body["reference_id"])) {
+            $reference_id = sanitize_text_field($message_body["reference_id"]);
+            $text = isset($message_body["text"])
+                ? sanitize_text_field($message_body["text"])
+                : "";
+            $gateway = isset($message_body["gateway"])
+                ? sanitize_text_field($message_body["gateway"])
+                : "";
+            $from = isset($message_body["from"])
+                ? sanitize_text_field($message_body["from"])
+                : "";
+            $member_id = TLR\tlr_get_member_id($from);
 
-
-	    $message_body = $message_body[0] ?? [];
-
-//        if (
-//            isset($message_body["type"]) &&
-//            "RECEIVED" === $message_body["type"]
-//        ) {
-//            $message_id = isset($message_body["id"])
-//                ? sanitize_text_field($message_body["id"])
-//                : "";
-//            $body = isset($message_body["body"])
-//                ? sanitize_text_field($message_body["body"])
-//                : "";
-//            $to = isset($message_body["to"])
-//                ? sanitize_text_field($message_body["to"])
-//                : "";
-//            $from = isset($message_body["from"])
-//                ? sanitize_text_field($message_body["from"])
-//                : "";
-//            $member_id = TLR\tlr_get_member_id($from);
-//
-//            if ("POST" !== $method || !$from || !$to || !$message_id) {
-//                return new WP_Error(
-//                    "rest_invalid_message_data",
-//                    esc_html("Invalid message data"),
-//                    ["status" => 404]
-//                );
-//            } else {
-//                $message = new TLR\Message();
-//                $message->set_recipient($from);
-//                $message->set_gateway("bulksms");
-//                $message->set_interface("bulksms-sms");
-//                $message->set_interface_number($to);
-//                $message->set_gateway_data(["id" => $message_id]);
-//                $message->set_content($body);
-//                $message->set_status("received");
-//                $message->set_trigger("tlr_inbound_message");
-//                $message->set_member_id($member_id);
-//                $message->save();
-//            }
-//        }
-	    return "success";
+            if (!$from || !$gateway || !$reference_id) {
+                return new WP_Error(
+                    "rest_invalid_message_data",
+                    esc_html("Invalid message data"),
+                    ["status" => 404]
+                );
+            } else {
+                $message = new TLR\Message();
+                $message->set_recipient($from);
+                $message->set_gateway("sabanovin");
+                $message->set_interface("sabanovin-sms");
+                $message->set_interface_number($gateway);
+                $message->set_gateway_data(["reference_id" => $reference_id]);
+                $message->set_content($text);
+                $message->set_status("received");
+                $message->set_trigger("tlr_inbound_message");
+                $message->set_member_id($member_id);
+                $message->save();
+            }
+        }
+        return "success";
     }
 
     public static function get_interfaces(): array
@@ -294,25 +280,25 @@ class Base implements TLR\Interfaces\Gateway
                     "type" => "password",
                 ],
             ],
-	        [
-		        "id" => "tlr_gateway_sabanovin_gateway",
-		        "title" => _x(
-			        "SabaNovin gateway number",
-			        "SabaNovin gateway",
-			        "texteller"
-		        ),
-		        "page" => "tlr_gateways",
-		        "section" => "tlr_gateway_sabanovin",
-		        "desc" => _x(
-			        "SabaNovin gateway number acquired from sabanovin.com",
-			        "SabaNovin gateway",
-			        "texteller"
-		        ),
-		        "type" => "input",
-		        "params" => [
-			        "type" => "text",
-		        ],
-	        ]
+            [
+                "id" => "tlr_gateway_sabanovin_gateway",
+                "title" => _x(
+                    "SabaNovin gateway number",
+                    "SabaNovin gateway",
+                    "texteller"
+                ),
+                "page" => "tlr_gateways",
+                "section" => "tlr_gateway_sabanovin",
+                "desc" => _x(
+                    "SabaNovin gateway number acquired from sabanovin.com",
+                    "SabaNovin gateway",
+                    "texteller"
+                ),
+                "type" => "input",
+                "params" => [
+                    "type" => "text",
+                ],
+            ],
         ];
         self::register_options($options);
     }
