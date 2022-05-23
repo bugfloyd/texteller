@@ -111,40 +111,42 @@ class Base implements TLR\Interfaces\Gateway
      */
     public static function rest_delivery_callback(WP_REST_Request $request)
     {
-        $method = $request->get_method();
-        $delivery_body = $request->get_body_params();
-        TLR\tlr_write_log($delivery_body);
-        TLR\tlr_write_log($method);
+        $delivery_body = $request->get_params();
 
-        //        if ("POST" === $method && !empty($delivery_body["id"])) {
-        //            $args = [
-        //                "object_type" => "message",
-        //                "statuses" => ["sent", "delivered", "failed", "pending"],
-        //                "gateways" => ["bulksms"],
-        //                "field" => "ID",
-        //                "gateway_data" => sanitize_text_field($delivery_body["id"]),
-        //            ];
-        //            $message_query = new TLR\Object_Query($args);
-        //            $message_id = $message_query->get_messages(1);
-        //            if (!empty($message_id)) {
-        //                $message = new TLR\Message($message_id[0]);
-        //                if ($message->get_id()) {
-        //                    if ($delivery_body["status"]["type"] == "DELIVERED") {
-        //                        $status = "delivered";
-        //                    } elseif ($delivery_body["status"]["type"] == "ACCEPTED") {
-        //                        $status = "sent";
-        //                    } else {
-        //                        $status = "failed";
-        //                    }
-        //                    $to = $delivery_body["from"];
-        //                    if ($message->get_interface_number() != $to) {
-        //                        $message->set_interface_number($to);
-        //                    }
-        //                    $message->set_status($status);
-        //                    $message->save();
-        //                }
-        //            }
-        //        }
+        if (!empty($delivery_body["reference_id"])) {
+            $args = [
+                "object_type" => "message",
+                "statuses" => ["sent", "delivered", "failed", "pending"],
+                "gateways" => ["sabanovin"],
+                "field" => "ID",
+                "gateway_data" => sanitize_text_field(
+                    $delivery_body["reference_id"]
+                ),
+            ];
+            $message_query = new TLR\Object_Query($args);
+            $message_id = $message_query->get_messages(1);
+            if (!empty($message_id)) {
+                $message = new TLR\Message($message_id[0]);
+                if ($message->get_id()) {
+                    if ($delivery_body["status"] == "DELIVERED") {
+                        $status = "delivered";
+                    } elseif (
+                        $delivery_body["status"] == "FAILED" ||
+                        $delivery_body["status"] == "FILTERED" ||
+                        $delivery_body["status"] == "BLACKLIST" ||
+                        $delivery_body["status"] == "INVALID_NUMBER" ||
+                        $delivery_body["status"] == "REJECTED" ||
+                        $delivery_body["status"] == "INAPPROPRIATE_CONTENT"
+                    ) {
+                        $status = "failed";
+                    } else {
+                        $status = "sent";
+                    }
+                    $message->set_status($status);
+                    $message->save();
+                }
+            }
+        }
 
         return "success";
     }
