@@ -15,10 +15,10 @@ class REST_Controller {
 	{
 		register_rest_route(
 			'texteller/v1',
-			'/receive/(?P<gateway>[\w]+)/',
+			'/receive/(?P<gateway_name>[\w]+)/',
 			[
 				'args'   => [
-					'gateway' => [
+					'gateway_name' => [
 						'description'       =>  __( 'Gateway Name' ),
 						'type'              =>  'string',
 						'validate_callback' =>  [ self::class, 'validate_gateway' ],
@@ -35,10 +35,10 @@ class REST_Controller {
 
 		register_rest_route(
 			'texteller/v1',
-			'/delivery/(?P<gateway>[\w]+)/',
+			'/delivery/(?P<gateway_name>[\w]+)/',
 			[
 				'args'   => [
-					'gateway' => [
+					'gateway_name' => [
 						'description'       =>  __( 'Gateway Name' ),
 						'type'              =>  'string',
 						'validate_callback' =>  [ self::class, 'validate_gateway' ],
@@ -61,7 +61,7 @@ class REST_Controller {
 	 */
 	public static function init_gateway_receive( $request )
 	{
-		$gateway_slug = $request->get_param('gateway');
+		$gateway_slug = $request->get_param('gateway_name');
 		$gateway_class = tlr_get_gateway_class($gateway_slug);
 		if ( method_exists( $gateway_class,'rest_receive_callback' ) ) {
 			$response = $gateway_class::rest_receive_callback( $request );
@@ -78,7 +78,7 @@ class REST_Controller {
 	 */
 	public static function init_gateway_delivery( $request )
 	{
-		$gateway_slug = $request->get_param('gateway');
+		$gateway_slug = $request->get_param('gateway_name');
 		$gateway_class = tlr_get_gateway_class($gateway_slug);
 		if ( method_exists( $gateway_class,'rest_delivery_callback' ) ) {
 			$response = $gateway_class::rest_delivery_callback( $request );

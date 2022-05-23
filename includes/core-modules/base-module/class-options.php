@@ -367,6 +367,7 @@ final class Options implements TLR\Interfaces\Options
 		    'bulksms'       =>  'BulkSMS',
 		    'gatewayapi'    =>  'GatewayAPI',
 		    'melipayamak'   =>  'Melipayamak',
+		    'sabanovin'     =>  'SabaNovin',
 		    'spryng'        =>  'Spryng',
 		    'twilio'        =>  'Twilio'
 	    ];
