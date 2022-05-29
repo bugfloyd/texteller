@@ -42,24 +42,20 @@ class Base implements TLR\Interfaces\Gateway
 	}
 
 
-	public function send( string $text, string $number, string $interface = '' , array $action_gateway_data = [] )
+	public function send( TLR\Message $message, array $action_gateway_data = [] )
 	{
-		if ( empty($number) || empty($text) ) {
-			return false;
-		}
-
-		switch ( $interface ) {
+		switch ( $message->get_interface() ) {
 
 			case 'melipayamak-shared' :
 			    if ( empty($action_gateway_data['mp_bid']) ) {
 			        return false;
                 }
-				$response = $this->shared_send( $text, $number, $action_gateway_data['mp_bid'] );
+				$response = $this->shared_send( $message->get_content(), $message->get_recipient(), $action_gateway_data['mp_bid'] );
 				break;
 
 			case 'melipayamak-dedicated' :
 			default:
-			$response = $this->dedicated_send( $text, [$number] );
+			$response = $this->dedicated_send( $message->get_content(), [ $message->get_recipient()] );
 		}
 		return $response;
 	}

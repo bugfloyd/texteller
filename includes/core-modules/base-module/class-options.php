@@ -369,6 +369,7 @@ final class Options implements TLR\Interfaces\Options
 		    'melipayamak'   =>  'Melipayamak',
 		    'sabanovin'     =>  'SabaNovin',
 		    'spryng'        =>  'Spryng',
+		    'textlocal'     =>  'Textlocal',
 		    'twilio'        =>  'Twilio'
 	    ];
 

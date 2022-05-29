@@ -84,6 +84,7 @@ class Message_List_Table extends Object_List_Table_Abstract
 		    'melipayamak'   =>  __( 'Melipayamak', 'texteller' ),
 		    'sabanovin'     =>  __( 'SabaNovin', 'texteller' ),
 		    'spryng'        =>  __( 'Spryng', 'texteller' ),
+		    'textlocal'     =>  __( 'Textlocal', 'texteller' ),
 		    'twilio'        =>  __( 'Twilio', 'texteller' ),
 	    ];
 

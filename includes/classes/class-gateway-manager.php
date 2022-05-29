@@ -73,11 +73,10 @@ class Gateway_Manager
 			$message = new Message();
 			$message->set_message_data( $message_array );
 			$message->save();
-			//$message->set_object_read( true );
 		}
 
 		if( isset($gateway_instance) ) {
-			$response = $gateway_instance->send( $content, $recipient_number, $interface, $action_gateway_data );
+			$response = $gateway_instance->send($message, $action_gateway_data);
 			if( ! is_null( $message ) ) {
 				$message->set_status( $response ? 'sent' : 'failed' );
 				$message->set_gateway_data(isset($response['data']) && is_array( $response['data'] ) ? $response['data'] : [] );
