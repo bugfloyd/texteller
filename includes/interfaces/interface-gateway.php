@@ -2,11 +2,13 @@
 
 namespace Texteller\Interfaces;
 
+use Texteller\Message;
+
 defined( 'ABSPATH' ) || exit;
 
 interface Gateway {
 
-	public function send( string $text, string $number, string $interface = '', array $action_gateway_data = []  );
+	public function send( Message $message, array $action_gateway_data = [] );
 
 	public function register_gateway_options();
 

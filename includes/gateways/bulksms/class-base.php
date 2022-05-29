@@ -72,17 +72,15 @@ class Base implements TLR\Interfaces\Gateway
     }
 
     public function send(
-        string $text,
-        string $number,
-        string $interface = "",
+        TLR\Message $message,
         array $action_gateway_data = []
     ) {
         if (!self::get_client()) {
             return false;
         }
 
-        if ("bulksms-sms" === $interface) {
-            return $this->send_sms($text, $number);
+        if ("bulksms-sms" === $message->get_interface()) {
+            return $this->send_sms($message->get_content(), $message->get_recipient());
         } else {
             return false;
         }

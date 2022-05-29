@@ -1,6 +1,6 @@
 <?php
 
-namespace Texteller\Gateways\SabaNovin;
+namespace Texteller\Gateways\Textlocal;
 
 use Texteller as TLR;
 use Exception;
@@ -16,25 +16,26 @@ class Base implements TLR\Interfaces\Gateway
     use TLR\Traits\Encrypted_Options;
 
     /**
-     * @var null|SabaNovin $client SabaNovin Client
+     * @var null|Textlocal $client Textlocal Client
      */
-    private static ?SabaNovin $client = null;
+    private static ?Textlocal $client = null;
 
     public function __construct()
     {
     }
 
-    public static function get_client(): ?SabaNovin
+    public static function get_client(): ?Textlocal
     {
         if (self::$client && is_object(self::$client)) {
             return self::$client;
         }
 
         try {
-            self::$client = new SabaNovin();
+            self::$client = new Textlocal();
         } catch (Exception $e) {
             TLR\tlr_write_log(
-                "SabaNovin: Failed to initialize client. " . $e->getMessage()
+                "Textlocal: Failed to initialize Textlocal client. " .
+                    $e->getMessage()
             );
             return null;
         }
@@ -48,13 +49,14 @@ class Base implements TLR\Interfaces\Gateway
         }
 
         $account_details = [];
-        $res = self::$client->get_balance();
+
+        $res = self::$client->get_account_details();
 
         if (!is_wp_error($res) && !empty($res)) {
-            $account_details["balance"] = $res;
+            $account_details["balance"] = $res->balance->sms;
         } else {
             TLR\tlr_write_log(
-                "SabaNovin: An error occurred while getting account balance " .
+                "Textlocal: An error occurred while getting account balance " .
                     $res->get_error_code() .
                     $res->get_error_message()
             );
@@ -63,38 +65,37 @@ class Base implements TLR\Interfaces\Gateway
         return $account_details;
     }
 
-    public function send(
-	    TLR\Message $message,
-        array $action_gateway_data = []
-    ) {
+    public function send(TLR\Message $message, array $action_gateway_data = [])
+    {
         if (!self::get_client()) {
             return false;
         }
 
-        if ("sabanovin-sms" === $message->get_interface()) {
-            return $this->send_sms($message->get_content(), $message->get_recipient());
+        if ("textlocal-sms" === $message->get_interface()) {
+            return $this->send_sms($message);
         } else {
             return false;
         }
     }
 
-    private function send_sms(string $text, string $number)
+    private function send_sms(TLR\Message $message)
     {
-        if (empty(self::get_client())) {
+        if (null === self::$client || !is_object(self::$client)) {
             return false;
         }
 
-        $result = self::$client->send_sms($number, $text);
+        $result = self::$client->send_sms($message);
 
         if (!is_wp_error($result)) {
             return !empty($result)
                 ? [
-                    "data" => ["reference_id" => $result->reference_id],
+                    "data" => ["id" => $result->messages[0]->id],
+                    "message_interface_number" => $result->message->sender,
                 ]
                 : false;
         } else {
             TLR\tlr_write_log(
-                "SabaNovin: An error occurred while sending the message. " .
+                "Textlocal: An error occurred while sending the message. " .
                     $result->get_error_code() .
                     $result->get_error_message()
             );
@@ -109,41 +110,27 @@ class Base implements TLR\Interfaces\Gateway
      */
     public static function rest_delivery_callback(WP_REST_Request $request)
     {
+        $method = $request->get_method();
         $delivery_body = $request->get_params();
 
-        if (!empty($delivery_body["reference_id"])) {
-            $args = [
-                "object_type" => "message",
-                "statuses" => ["sent", "delivered", "failed", "pending"],
-                "gateways" => ["sabanovin"],
-                "field" => "ID",
-                "gateway_data" => sanitize_text_field(
-                    $delivery_body["reference_id"]
-                ),
-            ];
-            $message_query = new TLR\Object_Query($args);
-            $message_id = $message_query->get_messages(1);
-            if (!empty($message_id)) {
-                $message = new TLR\Message($message_id[0]);
-                if ($message->get_id()) {
-                    if ($delivery_body["status"] == "DELIVERED") {
-                        $status = "delivered";
-                    } elseif (
-                        $delivery_body["status"] == "FAILED" ||
-                        $delivery_body["status"] == "FILTERED" ||
-                        $delivery_body["status"] == "BLACKLIST" ||
-                        $delivery_body["status"] == "INVALID_NUMBER" ||
-                        $delivery_body["status"] == "REJECTED" ||
-                        $delivery_body["status"] == "INAPPROPRIATE_CONTENT"
-                    ) {
-                        $status = "failed";
-                    } else {
-                        $status = "sent";
-                    }
-                    $message->set_status($status);
-                    $message->save();
-                }
-            }
+        if ("POST" === $method && !empty($delivery_body["customID"])) {
+            $status = $delivery_body["status"];
+	        $message = new TLR\Message($delivery_body["customID"]);
+	        if ($message->get_id()) {
+		        if ($status == "D") {
+			        $status = "delivered";
+		        } elseif (
+			        $status == "U" ||
+			        $status == "I" ||
+			        $status == "E"
+		        ) {
+			        $status = "failed";
+		        } else {
+			        $status = "sent";
+		        }
+		        $message->set_status($status);
+		        $message->save();
+	        }
         }
 
         return "success";
@@ -154,67 +141,69 @@ class Base implements TLR\Interfaces\Gateway
      *
      * @return string|WP_Error
      */
-    public static function rest_receive_callback(WP_REST_Request $request)
-    {
-        $message_body = $request->get_params();
+        public static function rest_receive_callback(WP_REST_Request $request)
+        {
+	        $method = $request->get_method();
+	        $receive_body = $request->get_params();
 
-        if (isset($message_body["reference_id"])) {
-            $reference_id = sanitize_text_field($message_body["reference_id"]);
-            $text = isset($message_body["text"])
-                ? sanitize_text_field($message_body["text"])
-                : "";
-            $gateway = isset($message_body["gateway"])
-                ? sanitize_text_field($message_body["gateway"])
-                : "";
-            $from = isset($message_body["from"])
-                ? sanitize_text_field($message_body["from"])
-                : "";
-            $member_id = TLR\tlr_get_member_id($from);
+	        if ("POST" === $method && !empty($receive_body["sender"])) {
+		        $keyword = isset($receive_body["keyword"])
+			        ? sanitize_text_field($receive_body["keyword"])
+			        : "";
+		        $content = isset($receive_body["content"])
+			        ? sanitize_text_field($receive_body["content"])
+			        : "";
+		        $inNumber = isset($receive_body["inNumber"])
+			        ? sanitize_text_field($receive_body["inNumber"])
+			        : "";
+		        $sender = sanitize_text_field($receive_body["sender"]);
+		        $member_id = TLR\tlr_get_member_id($sender);
 
-            if (!$from || !$gateway || !$reference_id) {
-                return new WP_Error(
-                    "rest_invalid_message_data",
-                    esc_html("Invalid message data"),
-                    ["status" => 404]
-                );
-            } else {
-                $message = new TLR\Message();
-                $message->set_recipient($from);
-                $message->set_gateway("sabanovin");
-                $message->set_interface("sabanovin-sms");
-                $message->set_interface_number($gateway);
-                $message->set_gateway_data(["reference_id" => $reference_id]);
-                $message->set_content($text);
-                $message->set_status("received");
-                $message->set_trigger("tlr_inbound_message");
-                $message->set_member_id($member_id);
-                $message->save();
-            }
+		        if (!$sender || !$inNumber) {
+			        return new WP_Error(
+				        "rest_invalid_message_data",
+				        esc_html("Invalid message data"),
+				        ["status" => 404]
+			        );
+		        } else {
+			        $message = new TLR\Message();
+			        $message->set_recipient($sender);
+			        $message->set_gateway("bulksms");
+			        $message->set_interface("bulksms-sms");
+			        $message->set_interface_number($inNumber);
+			        $message->set_gateway_data(["keyword" => $keyword]);
+			        $message->set_content($content);
+			        $message->set_status("received");
+			        $message->set_trigger("tlr_inbound_message");
+			        $message->set_member_id($member_id);
+			        $message->save();
+		        }
+	        }
+
+    	    return "success";
         }
-        return "success";
-    }
 
     public static function get_interfaces(): array
     {
         return [
-            "sabanovin-sms" => "SMS",
+            "textlocal-sms" => "SMS",
         ];
     }
 
     public static function get_default_interface(): string
     {
-        return "sabanovin-sms";
+        return "textlocal-sms";
     }
 
     public static function get_interface_number(string $interface): string
     {
-        return self::get_client()::get_gateway_number();
+        return self::get_client()::get_sender_name();
     }
 
     public static function get_content_types(): array
     {
         return [
-            "sabanovin-sms" => "text",
+            "textlocal-sms" => "text",
         ];
     }
 
@@ -239,7 +228,7 @@ class Base implements TLR\Interfaces\Gateway
             2
         );
         add_filter(
-            "pre_update_option_tlr_gateway_sabanovin_api_key",
+            "pre_update_option_tlr_gateway_textlocal_api_key",
             [self::class, "update_encrypted_option"],
             10,
             2
@@ -249,12 +238,12 @@ class Base implements TLR\Interfaces\Gateway
     public static function add_options()
     {
         self::register_section([
-            "id" => "tlr_gateway_sabanovin",
-            "title" => __("SabaNovin", "texteller"),
+            "id" => "tlr_gateway_textlocal",
+            "title" => __("Textlocal", "texteller"),
             "desc" => sprintf(
                 /* translators: %s: Gateway name */
                 __("Configure %s gateway options", "texteller"),
-                __("SabaNovin", "texteller")
+                __("Textlocal", "texteller")
             ),
             "class" => "description",
             "page" => "tlr_gateways",
@@ -262,17 +251,17 @@ class Base implements TLR\Interfaces\Gateway
 
         $options = [
             [
-                "id" => "tlr_gateway_sabanovin_api_key",
+                "id" => "tlr_gateway_textlocal_api_key",
                 "title" => _x(
-                    "SabaNovin API key",
-                    "SabaNovin gateway",
+                    "Textlocal API key",
+                    "Textlocal gateway",
                     "texteller"
                 ),
                 "page" => "tlr_gateways",
-                "section" => "tlr_gateway_sabanovin",
+                "section" => "tlr_gateway_textlocal",
                 "desc" => _x(
-                    "SabaNovin API key acquired from sabanovin.com",
-                    "SabaNovin gateway",
+                    "Textlocal API key acquired from textlocal.com",
+                    "Textlocal gateway",
                     "texteller"
                 ),
                 "type" => "input",
@@ -281,17 +270,13 @@ class Base implements TLR\Interfaces\Gateway
                 ],
             ],
             [
-                "id" => "tlr_gateway_sabanovin_gateway",
-                "title" => _x(
-                    "SabaNovin gateway number",
-                    "SabaNovin gateway",
-                    "texteller"
-                ),
+                "id" => "tlr_gateway_textlocal_sender",
+                "title" => __("Textlocal sender", "texteller"),
                 "page" => "tlr_gateways",
-                "section" => "tlr_gateway_sabanovin",
+                "section" => "tlr_gateway_textlocal",
                 "desc" => _x(
-                    "SabaNovin gateway number acquired from sabanovin.com",
-                    "SabaNovin gateway",
+                    "The sender of the message for Textlocal. Can be alphanumeric string (max. 11 characters) or phone number (max. 13 digits in E.164 format like 31612345678)",
+                    "Textlocal gateway",
                     "texteller"
                 ),
                 "type" => "input",
@@ -306,7 +291,7 @@ class Base implements TLR\Interfaces\Gateway
     public static function render_gateway_status($current_section, $current_tab)
     {
         if (
-            "tlr_gateway_sabanovin" !== $current_section ||
+            "tlr_gateway_textlocal" !== $current_section ||
             "tlr_gateways" !== $current_tab
         ) {
             return;
@@ -334,7 +319,9 @@ class Base implements TLR\Interfaces\Gateway
                     <span><?= esc_html__("Balance", "texteller") ?></span>
                 </div>
                 <div class="gateway-info-value-wrap">
-                    <span><?= esc_html($account_details["balance"]) ?></span>
+                    <span><?= esc_html(
+                        $account_details["balance"]
+                    ) ?> SMS</span>
                 </div>
                 <div class="gateway-info-label-wrap">
                     <span><?= esc_html__(
@@ -344,7 +331,7 @@ class Base implements TLR\Interfaces\Gateway
                 </div>
                 <div class="gateway-info-value-wrap">
                 <span><?= esc_html(
-                    get_rest_url(null, "texteller/v1/delivery/sabanovin")
+                    get_rest_url(null, "texteller/v1/delivery/textlocal")
                 ) ?></span>
                 </div>
                 <div class="gateway-info-label-wrap">
@@ -355,7 +342,7 @@ class Base implements TLR\Interfaces\Gateway
                 </div>
                 <div class="gateway-info-value-wrap">
                 <span><?= esc_html(
-                    get_rest_url(null, "texteller/v1/receive/sabanovin")
+                    get_rest_url(null, "texteller/v1/receive/textlocal")
                 ) ?></span>
                 </div><?php } ?>
         </div>
