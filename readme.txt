@@ -162,16 +162,13 @@ Of course! More plugin integration will be available in future updates. Some not
 
 == Changelog ==
 
-= 1.2.0 =
-* New: New gateway! gatewayapi.com full support: Send SMS, choose sender, get delivery reports, receive SMS
-
-= 1.1.1 =
-* Fix: Minor formatting issue in upgrade notices
-
-= 1.1.0 =
-* New: New gateway! Spryng.nl full support: Send SMS, choose originator, get delivery reports
-* Tweak: Now the plugin is able to store additional data coming from gateways while sending messages
-* Tweak: WooCommerce integration tested up to version 6.5.0
+= 1.3.0 =
+* New: BulkSMS gateway support
+* New: Textlocal gateway support
+* New: SabaNovin gateway support
+* Tweak: Add native support for GatewayAPI & remove third-party dependency
+* Tweak: Minor improvements and code refactoring
+* Fix: Store and use GatewayAPI message IDs to match delivery reports
 
 = 1.0 =
 * New: Tested the plugin up to WordPress 6.0
@@ -193,5 +190,5 @@ Of course! More plugin integration will be available in future updates. Some not
 * Fix: PHP notices while sending notifications when a gateway does not have extra data
 
 ## Upgrade Notice ##
-### 1.2.0 ###
+### 1.3.0 ###
 If you have PHP version below 7.4, you can download plugin version 0.1.3 from bit.ly/3yJQRUv which supports PHP 7.1 and above

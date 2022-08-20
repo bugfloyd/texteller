@@ -1,3 +1,11 @@
+= 1.3.0 =
+* New: BulkSMS gateway support
+* New: Textlocal gateway support
+* New: SabaNovin gateway support
+* Tweak: Add native support for GatewayAPI & remove third-party dependency
+* Tweak: Minor improvements and code refactoring
+* Fix: Store and use GatewayAPI message IDs to match delivery reports
+
 = 1.2.0 =
 * New: New gateway! gatewayapi.com full support: Send SMS, choose sender, get delivery reports, receive SMS
 

@@ -3,14 +3,14 @@
  * Plugin Name: Texteller
  * Plugin URI: https://www.texteller.com/
  Description: An all-in-one text message integration solution for WordPress and popular third-party plugins, supporting multiple SMS and messaging gateways.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Author: Yashar Hosseinpour
  * Text Domain: texteller
  * Requires at least: 5.3
  * Tested up to: 6.0
  * Requires PHP: 7.4
  * WC requires at least: 6.1
- * WC tested up to: 6.5.0
+ * WC tested up to: 6.8.1
  */
 
 namespace Texteller;

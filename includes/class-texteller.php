@@ -24,7 +24,7 @@ final class Texteller
      */
     protected static ?Texteller $instance = null;
 
-    public static string $version = "1.2.0";
+    public static string $version = "1.3.0";
 
     /**
      * Cloning is forbidden.
@@ -39,21 +39,19 @@ final class Texteller
     /**
      * Un-serializing instances of this class is forbidden.
      *
-     * @since 2.1
      */
     public function __wakeup()
     {
         _doing_it_wrong(
             __FUNCTION__,
             "Un-serializing instances of this class is forbidden.",
-            "3.0"
+            "0.1"
         );
     }
 
     /**
      * Constructor.
      *
-     * @since 3.0
      */
     private function __construct()
     {
@@ -499,7 +497,6 @@ final class Texteller
      * Instance
      * Used to retrieve the instance to use on other files/plugins/themes.
      *
-     * @since 3.0
      * @return Texteller instance of the class
      */
     public static function getInstance(): Texteller
