@@ -144,9 +144,13 @@ Of course! More plugin integration will be available in future updates. Some not
 Code released under the GNU GPL v3 License.
 
 ## Supported by JetBrains
-<div style="display: flex; align-items: center;">
-  <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="150px" style="margin-right: 20px;">
-  <p>
-    JetBrains has generously provided us with a free license to their suite of developer tools, which greatly aids our development process. You can learn more about JetBrains and their open source support program <a href="https://jb.gg/OpenSourceSupport">here</a>.
-  </p>
-</div>
+<table>
+  <tr>
+    <td>
+      <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="120px">
+    </td>
+    <td>
+      JetBrains has generously provided us with a free license to their suite of developer tools, which greatly aids our development process. You can learn more about JetBrains and their open source support program <a href="https://jb.gg/OpenSourceSupport" target="_blank">here</a>.
+    </td>
+  </tr>
+</table>
