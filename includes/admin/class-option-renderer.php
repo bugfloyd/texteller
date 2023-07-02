@@ -104,26 +104,20 @@ class Option_Renderer {
 
 	protected static function render_helper( $args )
 	{
-		$html = '<div class="tlr-helper-wrap">';
+		$helper = '';
 		if ( ! empty( $args['helper'] ) ) {
-			$html .= '<div class="tlr-helper"><span>';
-			$html .= $args['helper'];
-			$html .= '</span></div>';
+			$helper = "<div class='tlr-helper'><span>{$args['helper']}</span></div>";
 		}
-		$html .= '</div>';
-		return $html;
+		return "<div class='tlr-helper-wrap'>$helper</div>";
 	}
 
 	public static function render_description($args)
 	{
-		$html = '<div class="option-description-wrap">';
+		$desc = '';
 		if ( !empty($args['desc']) ) {
-			$html .= '<p class="description">';
-			$html .=  $args['desc'];
-			$html .= '</p>';
+			$desc = "<p class='description'>{$args['desc']}</p>";
         }
-		$html .= '</div>';
-		return $html;
+		return "<div class='option-description-wrap'>$desc</div>";
 	}
 
 	public static function input( array $option, string $value = null ) : string
