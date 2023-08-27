@@ -13,9 +13,10 @@ class Option_Renderer {
 		if ( 'hidden' === $method ) {
 		    return '';
         }
+		$class_name = esc_attr($args['id']) . "-wrap";
 
 		$html = '<div class="tlr-option-wrap">';
-        $html .= "<div class='{$args['id']}-wrap'>";
+        $html .= "<div class='$class_name'>";
 
 		if ( is_array($method) && class_exists($method[0]) && method_exists( $method[0], $method[1] ) ) {
 			$option_class = new $method[0];
