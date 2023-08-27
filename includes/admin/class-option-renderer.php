@@ -13,9 +13,10 @@ class Option_Renderer {
 		if ( 'hidden' === $method ) {
 		    return '';
         }
+		$class_name = esc_attr($args['id']) . "-wrap";
 
 		$html = '<div class="tlr-option-wrap">';
-        $html .= "<div class='{$args['id']}-wrap'>";
+        $html .= "<div class='$class_name'>";
 
 		if ( is_array($method) && class_exists($method[0]) && method_exists( $method[0], $method[1] ) ) {
 			$option_class = new $method[0];
@@ -33,97 +34,22 @@ class Option_Renderer {
 		echo $html;
 	}
 
-	protected function render_tlr_registration_field( $setting )
-	{
-		$sizes = [
-			'half' =>  __('Half Row', 'texteller'),
-			'full'  =>   __('Full Row', 'texteller')
-		];
-
-		$required = [
-			'1'  =>   __( 'Required', 'texteller' ),
-			'0'  =>   __( 'Optional', 'texteller' ),
-		];
-		$form_fields_order_size = get_option($setting['id']);
-
-		$html = '<div><ul class="tlr-sortable-fields">';
-		foreach($form_fields_order_size as $id => $title_size) {
-
-			$html .= '<li class="tlr-form-field">';
-
-			$disabled = $id == 'mobile' ? 'disabled' : '';
-			$checked = isset( $form_fields_order_size[$id]['enabled'] ) ?
-                checked( $form_fields_order_size[$id]['enabled'], 'yes', false) : '';
-
-			$html .= "<input type='checkbox' name='{$setting['id']}[$id][enabled]' class='field-control' $checked value='yes' $disabled>";
-
-			$html .= '<div class="tlr-form-field-wrapper">';
-
-			$html .= '<span class="field-title">' . $title_size['title'] . '</span></div>';
-			$html .= '<input type="hidden" name="' . $setting['id'] . '['. $id .'][id]" value="'. $id .'">';
-			$html .= '<input type="hidden" name="' . $setting['id'] . '['. $id .'][title]" value="'. $title_size['title'] .'">';
-
-			$html .= '<select name="' . $setting['id'] . '['. $id .'][size]">';
-			foreach ( $sizes as $value => $title ) {
-				$html .= '<option ';
-				$html .= selected( $title_size['size'], $value, false); //dropdown menu "selected" attribute
-				$html .= 'value="' . $value . '">';    //select option value
-				$html .= $title . '</option>';
-			}
-			$html .= '</select>';
-
-			$html .= "<select name='{$setting['id']}[$id][required]' $disabled>";
-			foreach ( $required as $value => $title ) {
-				$html .= '<option ';
-				$html .= selected( $title_size['required'], $value, false); //dropdown menu "selected" attribute
-				$html .= 'value="' . $value . '">';    //select option value
-				$html .= $title . '</option>';
-			}
-
-			$html .= '</select></li>';
-		}
-		$html .= '</ul></div>';
-
-		return $html;
-	}
-
-	/*
-	private function render_checkbox_list_field ($args, $html = '')
-	{
-		foreach ( $args['input']['options'] as $id => $title ) {
-			$html .= '<div class="form-field-wrapper"><input';    //opening input tag
-			$html .= ' name="' . $args['id']. "[$id]" . '"';   //input id and name
-			$html .= ' type="checkbox"' ;   //input type
-			$html .= isset(get_option( $args['id'] )[$id]) ? checked( get_option( $args['id'] )[$id], 'yes', false) : ''; //checkbox 'checked' attribute
-			$html .= ' value="yes">';    //checkbox value
-			$html .= '<span class="">' . $title . '</span></div>';
-			}
-		return $html;
-	}
-	*/
-
 	protected static function render_helper( $args )
 	{
-		$html = '<div class="tlr-helper-wrap">';
+		$helper = '';
 		if ( ! empty( $args['helper'] ) ) {
-			$html .= '<div class="tlr-helper"><span>';
-			$html .= $args['helper'];
-			$html .= '</span></div>';
+			$helper = "<div class='tlr-helper'><span>{$args['helper']}</span></div>";
 		}
-		$html .= '</div>';
-		return $html;
+		return "<div class='tlr-helper-wrap'>$helper</div>";
 	}
 
 	public static function render_description($args)
 	{
-		$html = '<div class="option-description-wrap">';
+		$desc = '';
 		if ( !empty($args['desc']) ) {
-			$html .= '<p class="description">';
-			$html .=  $args['desc'];
-			$html .= '</p>';
+			$desc = "<p class='description'>{$args['desc']}</p>";
         }
-		$html .= '</div>';
-		return $html;
+		return "<div class='option-description-wrap'>$desc</div>";
 	}
 
 	public static function input( array $option, string $value = null ) : string
